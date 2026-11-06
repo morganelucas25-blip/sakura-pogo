@@ -96,7 +96,10 @@
         <button onclick="switchTab('radar')" id="tab-btn-radar" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-1.5 font-bold">
           🎯 Radar
         </button>
-        <button onclick="switchTab('guide')" id="tab-btn-guide" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-1.5 font-bold">
+        <button onclick="switchTab('types')" id="tab-btn-types" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-1.5 font-bold whitespace-nowrap">
+          🛡️ Faiblesses
+        </button>
+        <button onclick="switchTab('guide')" id="tab-btn-guide" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-1.5 font-bold whitespace-nowrap">
           ⚡ Mémento
         </button>
       </nav>
@@ -551,6 +554,105 @@
     <!-- TAB 4 : RÈGLES & MÉMENTO                  -->
     <!-- ========================================== -->
         <!-- ========================================== -->
+    <!-- TAB 5 : GUIDE FAIBLESSES & RÉSISTANCES     -->
+    <!-- ========================================== -->
+    <section id="tab-types" class="space-y-6 hidden max-w-6xl mx-auto pb-12">
+      
+      <!-- Top Banner -->
+      <div class="bg-[#182234] p-6 rounded-3xl border border-slate-700/80 shadow-lg flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-black text-white flex items-center gap-3">
+            <span>🛡️</span> Guide des Faiblesses & Résistances
+          </h2>
+          <p class="text-sm text-slate-300 mt-1.5 font-medium">
+            Calculateur tactique instantané : choisis un Pokémon ou combine 2 types pour connaître ses faiblesses critiques (x2.56) et ses résistances pour tes Raids et Combats.
+          </p>
+        </div>
+        <span class="px-4 py-2 rounded-2xl bg-pink-500/20 text-pink-300 border border-pink-500/40 text-xs font-black tracking-wide">
+          18 Types · 324 Combinaisons
+        </span>
+      </div>
+
+      <!-- Quick Pokemon Search Bar -->
+      <div class="bg-[#182234] p-5 rounded-2xl border border-slate-700/80 shadow-md">
+        <label for="types-poke-search" class="text-xs font-black text-slate-300 uppercase tracking-wider block mb-2">
+          🔍 Recherche Express par Nom de Pokémon :
+        </label>
+        <div class="relative">
+          <input type="text" id="types-poke-search" 
+                 oninput="handlePokemonTypeSearch(this.value)" 
+                 placeholder="Tape le nom d'un Pokémon (ex: Dracaufeu, Lucario, Tyranocif, Carchacrok...)" 
+                 class="w-full bg-[#0f172a] text-white px-4 py-3 rounded-xl border border-slate-700 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 text-sm outline-none placeholder-slate-500">
+          <div id="types-poke-results" class="hidden absolute left-0 right-0 top-full mt-2 bg-[#0f172a] border border-slate-700 rounded-xl shadow-2xl z-40 max-h-56 overflow-y-auto"></div>
+        </div>
+      </div>
+
+      <!-- TYPE SELECTORS -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Type 1 Selector -->
+        <div class="bg-[#182234] p-5 sm:p-6 rounded-2xl border border-slate-700/80 shadow-md space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-black text-pink-400 uppercase tracking-wider">Type 1 (Principal) :</span>
+            <span id="selected-type1-badge" class="text-xs font-extrabold px-3 py-1 rounded-lg text-white bg-orange-600">🔥 Feu</span>
+          </div>
+          <div class="grid grid-cols-3 sm:grid-cols-6 gap-2" id="grid-type1-buttons">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Type 2 Selector -->
+        <div class="bg-[#182234] p-5 sm:p-6 rounded-2xl border border-slate-700/80 shadow-md space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-black text-pink-400 uppercase tracking-wider">Type 2 (Optionnel / Secondaire) :</span>
+            <span id="selected-type2-badge" class="text-xs font-extrabold px-3 py-1 rounded-lg text-slate-300 bg-slate-800">Aucun (Mono-type)</span>
+          </div>
+          <div class="grid grid-cols-3 sm:grid-cols-6 gap-2" id="grid-type2-buttons">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- DYNAMIC RESULT CARD -->
+      <div id="type-result-card" class="bg-[#182234] p-6 sm:p-8 rounded-3xl border-2 border-slate-700 shadow-xl space-y-6 transition-all">
+        <!-- Rendered dynamically by updateTypeMatchup() -->
+      </div>
+
+      <!-- EXHAUSTIVE DOCUMENTARY ACCORDION -->
+      <div class="bg-[#182234] rounded-2xl border border-slate-700/80 shadow-md overflow-hidden">
+        <button onclick="toggleExhaustiveTypesGuide()" class="w-full p-5 text-left flex items-center justify-between hover:bg-slate-800/50 transition-colors">
+          <div class="flex items-center gap-3">
+            <span class="text-xl">📚</span>
+            <div>
+              <span class="font-black text-white text-base block">Répertoire Documentaire Exhaustif des 18 Guides</span>
+              <span class="text-xs text-slate-400 font-medium">Consulter le tableau complet des 18 combinaisons pour chaque type maître.</span>
+            </div>
+          </div>
+          <span id="types-guide-toggle-icon" class="text-slate-400 text-lg transition-transform">▼</span>
+        </button>
+
+        <div id="types-guide-content" class="hidden p-5 sm:p-6 border-t border-slate-700/80 bg-[#0b0f19]/80 space-y-6">
+          <div class="flex items-center gap-2 overflow-x-auto pb-2" id="doc-type-pills">
+            <!-- Pills for 18 types -->
+          </div>
+          <div id="doc-type-table-container">
+            <!-- Full table of 18 rows for selected doc type -->
+          </div>
+        </div>
+      </div>
+
+      <!-- BANNIÈRE HAUT DE PAGE -->
+      <div class="pt-4 text-center">
+        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#182234] hover:bg-[#223049] text-slate-300 hover:text-white border border-slate-700 text-xs font-bold transition-all">
+          <span>🔝 Retour en haut de page</span>
+        </button>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
     <!-- TAB 4 : RÈGLES & MÉMENTO MASTER           -->
     <!-- ========================================== -->
         <!-- ========================================== -->
@@ -18964,12 +19066,19 @@
 
 
     function switchTab(tabId) {
-      ['sac', 'pokedex', 'radar', 'guide'].forEach(id => {
-        document.getElementById('tab-' + id).classList.add('hidden');
-        document.getElementById('tab-btn-' + id).className = 'px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-1.5 font-bold';
+      ['sac', 'pokedex', 'radar', 'types', 'guide'].forEach(id => {
+        const el = document.getElementById('tab-' + id);
+        const btn = document.getElementById('tab-btn-' + id);
+        if (el) el.classList.add('hidden');
+        if (btn) btn.className = 'px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-1.5 font-bold whitespace-nowrap';
       });
-      document.getElementById('tab-' + tabId).classList.remove('hidden');
-      document.getElementById('tab-btn-' + tabId).className = 'px-3.5 py-1.5 rounded-lg bg-pink-500 text-white shadow-md transition-all flex items-center gap-1.5 font-black';
+      const activeEl = document.getElementById('tab-' + tabId);
+      const activeBtn = document.getElementById('tab-btn-' + tabId);
+      if (activeEl) activeEl.classList.remove('hidden');
+      if (activeBtn) activeBtn.className = 'px-3.5 py-1.5 rounded-lg bg-pink-500 text-white shadow-md transition-all flex items-center gap-1.5 font-black whitespace-nowrap';
+      if (tabId === 'types') {
+        initTypesModule();
+      }
     }
 
     function filterBySection(secId) {
@@ -21313,7 +21422,448 @@
       applyDexFilters();
       updateGlobalTaskProgress();
     }, 50);
-  </script>
+  
+
+    // ==========================================
+    // MODULE TYPES & FAIBLESSES INTERACTIF
+    // ==========================================
+    const TYPE_COMBOS_DATA = {"Poison": {"Mono": {"t1": "Poison", "t2": null, "weak_d": [], "weak_s": ["Psy", "Sol"], "res_d": [], "res_s": ["Combat", "Fée", "Insecte", "Plante", "Poison"]}, "Acier": {"t1": "Poison", "t2": "Acier", "weak_d": ["Sol"], "weak_s": ["Feu"], "res_d": ["Fée", "Insecte", "Plante", "Poison"], "res_s": ["Acier", "Dragon", "Glace", "Normal", "Roche", "Vol"]}, "Combat": {"t1": "Poison", "t2": "Combat", "weak_d": ["Psy"], "weak_s": ["Sol", "Vol"], "res_d": ["Insecte"], "res_s": ["Combat", "Plante", "Poison", "Roche", "Ténèbres"]}, "Dragon": {"t1": "Poison", "t2": "Dragon", "weak_d": [], "weak_s": ["Dragon", "Glace", "Psy", "Sol"], "res_d": ["Plante"], "res_s": ["Combat", "Eau", "Feu", "Insecte", "Poison", "Électrik"]}, "Eau": {"t1": "Poison", "t2": "Eau", "weak_d": [], "weak_s": ["Psy", "Sol", "Électrik"], "res_d": [], "res_s": ["Acier", "Combat", "Eau", "Feu", "Fée", "Glace", "Insecte", "Poison"]}, "Feu": {"t1": "Poison", "t2": "Feu", "weak_d": ["Sol"], "weak_s": ["Eau", "Psy", "Roche"], "res_d": ["Fée", "Insecte", "Plante"], "res_s": ["Acier", "Combat", "Feu", "Glace", "Poison"]}, "Fée": {"t1": "Poison", "t2": "Fée", "weak_d": [], "weak_s": ["Acier", "Psy", "Sol"], "res_d": ["Combat", "Dragon", "Insecte"], "res_s": ["Fée", "Plante", "Ténèbres"]}, "Glace": {"t1": "Poison", "t2": "Glace", "weak_d": [], "weak_s": ["Acier", "Feu", "Psy", "Roche", "Sol"], "res_d": [], "res_s": ["Fée", "Glace", "Insecte", "Plante", "Poison"]}, "Insecte": {"t1": "Poison", "t2": "Insecte", "weak_d": [], "weak_s": ["Feu", "Psy", "Roche", "Vol"], "res_d": ["Combat", "Plante"], "res_s": ["Fée", "Insecte", "Poison"]}, "Normal": {"t1": "Poison", "t2": "Normal", "weak_d": [], "weak_s": ["Psy", "Sol"], "res_d": ["Spectre"], "res_s": ["Fée", "Insecte", "Plante", "Poison"]}, "Plante": {"t1": "Poison", "t2": "Plante", "weak_d": [], "weak_s": ["Feu", "Glace", "Psy", "Vol"], "res_d": ["Plante"], "res_s": ["Combat", "Eau", "Fée", "Électrik"]}, "Psy": {"t1": "Poison", "t2": "Psy", "weak_d": [], "weak_s": ["Sol", "Spectre", "Ténèbres"], "res_d": ["Combat"], "res_s": ["Fée", "Plante", "Poison"]}, "Roche": {"t1": "Poison", "t2": "Roche", "weak_d": ["Sol"], "weak_s": ["Acier", "Eau", "Psy"], "res_d": ["Poison"], "res_s": ["Feu", "Fée", "Insecte", "Normal", "Vol"]}, "Sol": {"t1": "Poison", "t2": "Sol", "weak_d": [], "weak_s": ["Eau", "Glace", "Psy", "Sol"], "res_d": ["Poison", "Électrik"], "res_s": ["Combat", "Fée", "Insecte", "Roche"]}, "Spectre": {"t1": "Poison", "t2": "Spectre", "weak_d": [], "weak_s": ["Psy", "Sol", "Spectre", "Ténèbres"], "res_d": ["Combat", "Insecte", "Normal", "Poison"], "res_s": ["Fée", "Plante"]}, "Ténèbres": {"t1": "Poison", "t2": "Ténèbres", "weak_d": [], "weak_s": ["Sol"], "res_d": [], "res_s": ["Plante", "Poison", "Psy", "Spectre", "Ténèbres"]}, "Vol": {"t1": "Poison", "t2": "Vol", "weak_d": [], "weak_s": ["Glace", "Psy", "Roche", "Électrik"], "res_d": ["Combat", "Insecte", "Plante"], "res_s": ["Fée", "Poison", "Sol"]}, "Électrik": {"t1": "Poison", "t2": "Électrik", "weak_d": ["Sol"], "weak_s": ["Psy"], "res_d": [], "res_s": ["Acier", "Combat", "Fée", "Insecte", "Plante", "Poison", "Vol", "Électrik"]}}, "Électrik": {"Mono": {"t1": "Électrik", "t2": null, "weak_d": [], "weak_s": ["Sol"], "res_d": [], "res_s": ["Acier", "Vol", "Électrik"]}, "Acier": {"t1": "Électrik", "t2": "Acier", "weak_d": ["Sol"], "weak_s": ["Combat", "Feu"], "res_d": ["Acier", "Poison", "Vol"], "res_s": ["Dragon", "Fée", "Glace", "Insecte", "Normal", "Plante", "Psy", "Roche", "Électrik"]}, "Combat": {"t1": "Électrik", "t2": "Combat", "weak_d": [], "weak_s": ["Fée", "Psy", "Sol"], "res_d": [], "res_s": ["Acier", "Insecte", "Roche", "Ténèbres", "Électrik"]}, "Dragon": {"t1": "Électrik", "t2": "Dragon", "weak_d": [], "weak_s": ["Dragon", "Fée", "Glace", "Sol"], "res_d": ["Électrik"], "res_s": ["Acier", "Eau", "Feu", "Plante", "Vol"]}, "Eau": {"t1": "Électrik", "t2": "Eau", "weak_d": [], "weak_s": ["Plante", "Sol"], "res_d": ["Acier"], "res_s": ["Eau", "Feu", "Glace", "Vol"]}, "Feu": {"t1": "Électrik", "t2": "Feu", "weak_d": ["Sol"], "weak_s": ["Eau", "Roche"], "res_d": ["Acier"], "res_s": ["Feu", "Fée", "Glace", "Insecte", "Plante", "Vol", "Électrik"]}, "Fée": {"t1": "Électrik", "t2": "Fée", "weak_d": [], "weak_s": ["Poison", "Sol"], "res_d": ["Dragon"], "res_s": ["Combat", "Insecte", "Ténèbres", "Vol", "Électrik"]}, "Glace": {"t1": "Électrik", "t2": "Glace", "weak_d": [], "weak_s": ["Combat", "Feu", "Roche", "Sol"], "res_d": [], "res_s": ["Glace", "Vol", "Électrik"]}, "Insecte": {"t1": "Électrik", "t2": "Insecte", "weak_d": [], "weak_s": ["Feu", "Roche"], "res_d": [], "res_s": ["Acier", "Combat", "Plante", "Électrik"]}, "Normal": {"t1": "Électrik", "t2": "Normal", "weak_d": [], "weak_s": ["Combat", "Sol"], "res_d": ["Spectre"], "res_s": ["Acier", "Vol", "Électrik"]}, "Plante": {"t1": "Électrik", "t2": "Plante", "weak_d": [], "weak_s": ["Feu", "Glace", "Insecte", "Poison"], "res_d": ["Électrik"], "res_s": ["Acier", "Eau", "Plante"]}, "Poison": {"t1": "Électrik", "t2": "Poison", "weak_d": ["Sol"], "weak_s": ["Psy"], "res_d": [], "res_s": ["Acier", "Combat", "Fée", "Insecte", "Plante", "Poison", "Vol", "Électrik"]}, "Psy": {"t1": "Électrik", "t2": "Psy", "weak_d": [], "weak_s": ["Insecte", "Sol", "Spectre", "Ténèbres"], "res_d": [], "res_s": ["Acier", "Combat", "Psy", "Vol", "Électrik"]}, "Roche": {"t1": "Électrik", "t2": "Roche", "weak_d": ["Sol"], "weak_s": ["Combat", "Eau", "Plante"], "res_d": ["Vol"], "res_s": ["Feu", "Normal", "Poison", "Électrik"]}, "Sol": {"t1": "Électrik", "t2": "Sol", "weak_d": [], "weak_s": ["Eau", "Glace", "Plante", "Sol"], "res_d": ["Électrik"], "res_s": ["Acier", "Poison", "Roche", "Vol"]}, "Spectre": {"t1": "Électrik", "t2": "Spectre", "weak_d": [], "weak_s": ["Sol", "Spectre", "Ténèbres"], "res_d": ["Combat", "Normal"], "res_s": ["Acier", "Insecte", "Poison", "Vol", "Électrik"]}, "Ténèbres": {"t1": "Électrik", "t2": "Ténèbres", "weak_d": [], "weak_s": ["Combat", "Fée", "Insecte", "Sol"], "res_d": ["Psy"], "res_s": ["Acier", "Spectre", "Ténèbres", "Vol", "Électrik"]}, "Vol": {"t1": "Électrik", "t2": "Vol", "weak_d": [], "weak_s": ["Glace", "Roche"], "res_d": [], "res_s": ["Acier", "Combat", "Insecte", "Plante", "Sol", "Vol"]}}, "Glace": {"Mono": {"t1": "Glace", "t2": null, "weak_d": [], "weak_s": ["Acier", "Combat", "Feu", "Roche"], "res_d": [], "res_s": ["Glace"]}, "Acier": {"t1": "Glace", "t2": "Acier", "weak_d": ["Combat", "Feu"], "weak_s": ["Sol"], "res_d": ["Glace", "Poison"], "res_s": ["Dragon", "Fée", "Insecte", "Normal", "Plante", "Psy", "Vol"]}, "Combat": {"t1": "Glace", "t2": "Combat", "weak_d": [], "weak_s": ["Acier", "Combat", "Feu", "Fée", "Psy", "Vol"], "res_d": [], "res_s": ["Glace", "Insecte", "Ténèbres"]}, "Dragon": {"t1": "Glace", "t2": "Dragon", "weak_d": [], "weak_s": ["Acier", "Combat", "Dragon", "Fée", "Roche"], "res_d": [], "res_s": ["Eau", "Plante", "Électrik"]}, "Eau": {"t1": "Glace", "t2": "Eau", "weak_d": [], "weak_s": ["Combat", "Plante", "Roche", "Électrik"], "res_d": ["Glace"], "res_s": ["Eau"]}, "Feu": {"t1": "Glace", "t2": "Feu", "weak_d": ["Roche"], "weak_s": ["Combat", "Eau", "Sol"], "res_d": ["Glace"], "res_s": ["Fée", "Insecte", "Plante"]}, "Fée": {"t1": "Glace", "t2": "Fée", "weak_d": ["Acier"], "weak_s": ["Feu", "Poison", "Roche"], "res_d": ["Dragon"], "res_s": ["Glace", "Insecte", "Ténèbres"]}, "Insecte": {"t1": "Glace", "t2": "Insecte", "weak_d": ["Feu", "Roche"], "weak_s": ["Acier", "Vol"], "res_d": [], "res_s": ["Glace", "Plante", "Sol"]}, "Normal": {"t1": "Glace", "t2": "Normal", "weak_d": ["Combat"], "weak_s": ["Acier", "Feu", "Roche"], "res_d": ["Spectre"], "res_s": ["Glace"]}, "Plante": {"t1": "Glace", "t2": "Plante", "weak_d": ["Feu"], "weak_s": ["Acier", "Combat", "Insecte", "Poison", "Roche", "Vol"], "res_d": [], "res_s": ["Eau", "Plante", "Sol", "Électrik"]}, "Poison": {"t1": "Glace", "t2": "Poison", "weak_d": [], "weak_s": ["Acier", "Feu", "Psy", "Roche", "Sol"], "res_d": [], "res_s": ["Fée", "Glace", "Insecte", "Plante", "Poison"]}, "Psy": {"t1": "Glace", "t2": "Psy", "weak_d": [], "weak_s": ["Acier", "Feu", "Insecte", "Roche", "Spectre", "Ténèbres"], "res_d": [], "res_s": ["Glace", "Psy"]}, "Roche": {"t1": "Glace", "t2": "Roche", "weak_d": ["Acier", "Combat"], "weak_s": ["Eau", "Plante", "Roche", "Sol"], "res_d": [], "res_s": ["Glace", "Normal", "Poison", "Vol"]}, "Sol": {"t1": "Glace", "t2": "Sol", "weak_d": [], "weak_s": ["Acier", "Combat", "Eau", "Feu", "Plante"], "res_d": ["Électrik"], "res_s": ["Poison"]}, "Spectre": {"t1": "Glace", "t2": "Spectre", "weak_d": [], "weak_s": ["Acier", "Feu", "Roche", "Spectre", "Ténèbres"], "res_d": ["Normal"], "res_s": ["Combat", "Glace", "Insecte", "Poison"]}, "Ténèbres": {"t1": "Glace", "t2": "Ténèbres", "weak_d": ["Combat"], "weak_s": ["Acier", "Feu", "Fée", "Insecte", "Roche"], "res_d": ["Psy"], "res_s": ["Glace", "Spectre", "Ténèbres"]}, "Vol": {"t1": "Glace", "t2": "Vol", "weak_d": ["Roche"], "weak_s": ["Acier", "Feu", "Électrik"], "res_d": ["Sol"], "res_s": ["Insecte", "Plante"]}, "Électrik": {"t1": "Glace", "t2": "Électrik", "weak_d": [], "weak_s": ["Combat", "Feu", "Roche", "Sol"], "res_d": [], "res_s": ["Glace", "Vol", "Électrik"]}}, "Psy": {"Mono": {"t1": "Psy", "t2": null, "weak_d": [], "weak_s": ["Insecte", "Spectre", "Ténèbres"], "res_d": [], "res_s": ["Combat", "Psy"]}, "Acier": {"t1": "Psy", "t2": "Acier", "weak_d": [], "weak_s": ["Feu", "Sol", "Spectre", "Ténèbres"], "res_d": ["Poison", "Psy"], "res_s": ["Acier", "Dragon", "Fée", "Glace", "Normal", "Plante", "Roche", "Vol"]}, "Combat": {"t1": "Psy", "t2": "Combat", "weak_d": [], "weak_s": ["Fée", "Spectre", "Vol"], "res_d": [], "res_s": ["Combat", "Roche"]}, "Dragon": {"t1": "Psy", "t2": "Dragon", "weak_d": [], "weak_s": ["Dragon", "Fée", "Glace", "Insecte", "Spectre", "Ténèbres"], "res_d": [], "res_s": ["Combat", "Eau", "Feu", "Plante", "Psy", "Électrik"]}, "Eau": {"t1": "Psy", "t2": "Eau", "weak_d": [], "weak_s": ["Insecte", "Plante", "Spectre", "Ténèbres", "Électrik"], "res_d": [], "res_s": ["Acier", "Combat", "Eau", "Feu", "Glace", "Psy"]}, "Feu": {"t1": "Psy", "t2": "Feu", "weak_d": [], "weak_s": ["Eau", "Roche", "Sol", "Spectre", "Ténèbres"], "res_d": [], "res_s": ["Acier", "Combat", "Feu", "Fée", "Glace", "Plante", "Psy"]}, "Fée": {"t1": "Psy", "t2": "Fée", "weak_d": [], "weak_s": ["Acier", "Poison", "Spectre"], "res_d": ["Combat", "Dragon"], "res_s": ["Psy"]}, "Glace": {"t1": "Psy", "t2": "Glace", "weak_d": [], "weak_s": ["Acier", "Feu", "Insecte", "Roche", "Spectre", "Ténèbres"], "res_d": [], "res_s": ["Glace", "Psy"]}, "Insecte": {"t1": "Psy", "t2": "Insecte", "weak_d": [], "weak_s": ["Feu", "Insecte", "Roche", "Spectre", "Ténèbres", "Vol"], "res_d": ["Combat"], "res_s": ["Plante", "Psy", "Sol"]}, "Normal": {"t1": "Psy", "t2": "Normal", "weak_d": [], "weak_s": ["Insecte", "Ténèbres"], "res_d": [], "res_s": ["Psy", "Spectre"]}, "Plante": {"t1": "Psy", "t2": "Plante", "weak_d": ["Insecte"], "weak_s": ["Feu", "Glace", "Poison", "Spectre", "Ténèbres", "Vol"], "res_d": [], "res_s": ["Combat", "Eau", "Plante", "Psy", "Sol", "Électrik"]}, "Poison": {"t1": "Psy", "t2": "Poison", "weak_d": [], "weak_s": ["Sol", "Spectre", "Ténèbres"], "res_d": ["Combat"], "res_s": ["Fée", "Plante", "Poison"]}, "Roche": {"t1": "Psy", "t2": "Roche", "weak_d": [], "weak_s": ["Acier", "Eau", "Insecte", "Plante", "Sol", "Spectre", "Ténèbres"], "res_d": [], "res_s": ["Feu", "Normal", "Poison", "Psy", "Vol"]}, "Sol": {"t1": "Psy", "t2": "Sol", "weak_d": [], "weak_s": ["Eau", "Glace", "Insecte", "Plante", "Spectre", "Ténèbres"], "res_d": ["Électrik"], "res_s": ["Combat", "Poison", "Psy", "Roche"]}, "Spectre": {"t1": "Psy", "t2": "Spectre", "weak_d": [], "weak_s": ["Spectre", "Ténèbres"], "res_d": ["Combat", "Normal"], "res_s": ["Poison", "Psy"]}, "Ténèbres": {"t1": "Psy", "t2": "Ténèbres", "weak_d": ["Insecte"], "weak_s": ["Fée"], "res_d": [], "res_s": ["Psy"]}, "Vol": {"t1": "Psy", "t2": "Vol", "weak_d": [], "weak_s": ["Glace", "Roche", "Spectre", "Ténèbres", "Électrik"], "res_d": ["Combat", "Sol"], "res_s": ["Plante", "Psy"]}, "Électrik": {"t1": "Psy", "t2": "Électrik", "weak_d": [], "weak_s": ["Insecte", "Sol", "Spectre", "Ténèbres"], "res_d": [], "res_s": ["Acier", "Combat", "Psy", "Vol", "Électrik"]}}, "Ténèbres": {"Mono": {"t1": "Ténèbres", "t2": null, "weak_d": [], "weak_s": ["Combat", "Fée", "Insecte"], "res_d": ["Psy"], "res_s": ["Spectre", "Ténèbres"]}, "Acier": {"t1": "Ténèbres", "t2": "Acier", "weak_d": ["Combat"], "weak_s": ["Feu", "Sol"], "res_d": ["Poison", "Psy"], "res_s": ["Acier", "Dragon", "Glace", "Normal", "Plante", "Roche", "Spectre", "Ténèbres", "Vol"]}, "Combat": {"t1": "Ténèbres", "t2": "Combat", "weak_d": ["Fée"], "weak_s": ["Combat", "Vol"], "res_d": ["Ténèbres"], "res_s": ["Psy", "Roche", "Spectre"]}, "Dragon": {"t1": "Ténèbres", "t2": "Dragon", "weak_d": ["Fée"], "weak_s": ["Combat", "Dragon", "Glace", "Insecte"], "res_d": ["Psy"], "res_s": ["Eau", "Feu", "Plante", "Spectre", "Ténèbres", "Électrik"]}, "Eau": {"t1": "Ténèbres", "t2": "Eau", "weak_d": [], "weak_s": ["Combat", "Fée", "Insecte", "Plante", "Électrik"], "res_d": ["Psy"], "res_s": ["Acier", "Eau", "Feu", "Glace", "Spectre", "Ténèbres"]}, "Feu": {"t1": "Ténèbres", "t2": "Feu", "weak_d": [], "weak_s": ["Combat", "Eau", "Roche", "Sol"], "res_d": ["Psy"], "res_s": ["Acier", "Feu", "Glace", "Plante", "Spectre", "Ténèbres"]}, "Fée": {"t1": "Ténèbres", "t2": "Fée", "weak_d": [], "weak_s": ["Acier", "Fée", "Poison"], "res_d": ["Dragon", "Psy", "Ténèbres"], "res_s": ["Spectre"]}, "Glace": {"t1": "Ténèbres", "t2": "Glace", "weak_d": ["Combat"], "weak_s": ["Acier", "Feu", "Fée", "Insecte", "Roche"], "res_d": ["Psy"], "res_s": ["Glace", "Spectre", "Ténèbres"]}, "Insecte": {"t1": "Ténèbres", "t2": "Insecte", "weak_d": [], "weak_s": ["Feu", "Fée", "Insecte", "Roche", "Vol"], "res_d": ["Psy"], "res_s": ["Plante", "Sol", "Spectre", "Ténèbres"]}, "Normal": {"t1": "Ténèbres", "t2": "Normal", "weak_d": ["Combat"], "weak_s": ["Fée", "Insecte"], "res_d": ["Psy", "Spectre"], "res_s": ["Ténèbres"]}, "Plante": {"t1": "Ténèbres", "t2": "Plante", "weak_d": ["Insecte"], "weak_s": ["Combat", "Feu", "Fée", "Glace", "Poison", "Vol"], "res_d": ["Psy"], "res_s": ["Eau", "Plante", "Sol", "Spectre", "Ténèbres", "Électrik"]}, "Poison": {"t1": "Ténèbres", "t2": "Poison", "weak_d": [], "weak_s": ["Sol"], "res_d": [], "res_s": ["Plante", "Poison", "Psy", "Spectre", "Ténèbres"]}, "Psy": {"t1": "Ténèbres", "t2": "Psy", "weak_d": ["Insecte"], "weak_s": ["Fée"], "res_d": [], "res_s": ["Psy"]}, "Roche": {"t1": "Ténèbres", "t2": "Roche", "weak_d": ["Combat"], "weak_s": ["Acier", "Eau", "Fée", "Insecte", "Plante", "Sol"], "res_d": ["Psy"], "res_s": ["Feu", "Normal", "Poison", "Spectre", "Ténèbres", "Vol"]}, "Sol": {"t1": "Ténèbres", "t2": "Sol", "weak_d": [], "weak_s": ["Combat", "Eau", "Fée", "Glace", "Insecte", "Plante"], "res_d": ["Psy", "Électrik"], "res_s": ["Poison", "Roche", "Spectre", "Ténèbres"]}, "Spectre": {"t1": "Ténèbres", "t2": "Spectre", "weak_d": [], "weak_s": ["Fée"], "res_d": ["Normal", "Psy"], "res_s": ["Combat", "Poison"]}, "Vol": {"t1": "Ténèbres", "t2": "Vol", "weak_d": [], "weak_s": ["Fée", "Glace", "Roche", "Électrik"], "res_d": ["Psy", "Sol"], "res_s": ["Plante", "Spectre", "Ténèbres"]}, "Électrik": {"t1": "Ténèbres", "t2": "Électrik", "weak_d": [], "weak_s": ["Combat", "Fée", "Insecte", "Sol"], "res_d": ["Psy"], "res_s": ["Acier", "Spectre", "Ténèbres", "Vol", "Électrik"]}}, "Plante": {"Mono": {"t1": "Plante", "t2": null, "weak_d": [], "weak_s": ["Feu", "Glace", "Insecte", "Poison", "Vol"], "res_d": [], "res_s": ["Eau", "Plante", "Sol", "Électrik"]}, "Acier": {"t1": "Plante", "t2": "Acier", "weak_d": ["Feu"], "weak_s": ["Combat"], "res_d": ["Plante"], "res_s": ["Acier", "Dragon", "Eau", "Fée", "Normal", "Poison", "Psy", "Roche", "Électrik"]}, "Combat": {"t1": "Plante", "t2": "Combat", "weak_d": ["Vol"], "weak_s": ["Feu", "Fée", "Glace", "Poison", "Psy"], "res_d": [], "res_s": ["Eau", "Plante", "Roche", "Sol", "Ténèbres", "Électrik"]}, "Dragon": {"t1": "Plante", "t2": "Dragon", "weak_d": ["Glace"], "weak_s": ["Dragon", "Fée", "Insecte", "Poison", "Vol"], "res_d": ["Eau", "Plante", "Électrik"], "res_s": ["Sol"]}, "Eau": {"t1": "Plante", "t2": "Eau", "weak_d": [], "weak_s": ["Insecte", "Poison", "Vol"], "res_d": ["Eau"], "res_s": ["Acier", "Sol"]}, "Feu": {"t1": "Plante", "t2": "Feu", "weak_d": [], "weak_s": ["Poison", "Roche", "Vol"], "res_d": ["Plante"], "res_s": ["Acier", "Fée", "Électrik"]}, "Fée": {"t1": "Plante", "t2": "Fée", "weak_d": ["Poison"], "weak_s": ["Acier", "Feu", "Glace", "Vol"], "res_d": ["Dragon"], "res_s": ["Combat", "Eau", "Plante", "Sol", "Ténèbres", "Électrik"]}, "Glace": {"t1": "Plante", "t2": "Glace", "weak_d": ["Feu"], "weak_s": ["Acier", "Combat", "Insecte", "Poison", "Roche", "Vol"], "res_d": [], "res_s": ["Eau", "Plante", "Sol", "Électrik"]}, "Insecte": {"t1": "Plante", "t2": "Insecte", "weak_d": ["Feu", "Vol"], "weak_s": ["Glace", "Insecte", "Poison", "Roche"], "res_d": ["Plante", "Sol"], "res_s": ["Combat", "Eau", "Électrik"]}, "Normal": {"t1": "Plante", "t2": "Normal", "weak_d": [], "weak_s": ["Combat", "Feu", "Glace", "Insecte", "Poison", "Vol"], "res_d": ["Spectre"], "res_s": ["Eau", "Plante", "Sol", "Électrik"]}, "Poison": {"t1": "Plante", "t2": "Poison", "weak_d": [], "weak_s": ["Feu", "Glace", "Psy", "Vol"], "res_d": ["Plante"], "res_s": ["Combat", "Eau", "Fée", "Électrik"]}, "Psy": {"t1": "Plante", "t2": "Psy", "weak_d": ["Insecte"], "weak_s": ["Feu", "Glace", "Poison", "Spectre", "Ténèbres", "Vol"], "res_d": [], "res_s": ["Combat", "Eau", "Plante", "Psy", "Sol", "Électrik"]}, "Roche": {"t1": "Plante", "t2": "Roche", "weak_d": [], "weak_s": ["Acier", "Combat", "Glace", "Insecte"], "res_d": [], "res_s": ["Normal", "Électrik"]}, "Sol": {"t1": "Plante", "t2": "Sol", "weak_d": ["Glace"], "weak_s": ["Feu", "Insecte", "Vol"], "res_d": ["Électrik"], "res_s": ["Roche", "Sol"]}, "Spectre": {"t1": "Plante", "t2": "Spectre", "weak_d": [], "weak_s": ["Feu", "Glace", "Spectre", "Ténèbres", "Vol"], "res_d": ["Combat", "Normal"], "res_s": ["Eau", "Plante", "Sol", "Électrik"]}, "Ténèbres": {"t1": "Plante", "t2": "Ténèbres", "weak_d": ["Insecte"], "weak_s": ["Combat", "Feu", "Fée", "Glace", "Poison", "Vol"], "res_d": ["Psy"], "res_s": ["Eau", "Plante", "Sol", "Spectre", "Ténèbres", "Électrik"]}, "Vol": {"t1": "Plante", "t2": "Vol", "weak_d": ["Glace"], "weak_s": ["Feu", "Poison", "Roche", "Vol"], "res_d": ["Plante", "Sol"], "res_s": ["Combat", "Eau"]}, "Électrik": {"t1": "Plante", "t2": "Électrik", "weak_d": [], "weak_s": ["Feu", "Glace", "Insecte", "Poison"], "res_d": ["Électrik"], "res_s": ["Acier", "Eau", "Plante"]}}, "Dragon": {"Mono": {"t1": "Dragon", "t2": null, "weak_d": [], "weak_s": ["Dragon", "Fée", "Glace"], "res_d": [], "res_s": ["Eau", "Feu", "Plante", "Électrik"]}, "Acier": {"t1": "Dragon", "t2": "Acier", "weak_d": [], "weak_s": ["Combat", "Sol"], "res_d": ["Plante", "Poison"], "res_s": ["Acier", "Eau", "Insecte", "Normal", "Psy", "Roche", "Vol", "Électrik"]}, "Combat": {"t1": "Dragon", "t2": "Combat", "weak_d": ["Fée"], "weak_s": ["Dragon", "Glace", "Psy", "Vol"], "res_d": [], "res_s": ["Eau", "Feu", "Insecte", "Plante", "Roche", "Ténèbres", "Électrik"]}, "Eau": {"t1": "Dragon", "t2": "Eau", "weak_d": [], "weak_s": ["Dragon", "Fée"], "res_d": ["Eau", "Feu"], "res_s": ["Acier"]}, "Feu": {"t1": "Dragon", "t2": "Feu", "weak_d": [], "weak_s": ["Dragon", "Roche", "Sol"], "res_d": ["Feu", "Plante"], "res_s": ["Acier", "Insecte", "Électrik"]}, "Fée": {"t1": "Dragon", "t2": "Fée", "weak_d": [], "weak_s": ["Acier", "Fée", "Glace", "Poison"], "res_d": [], "res_s": ["Combat", "Dragon", "Eau", "Feu", "Insecte", "Plante", "Ténèbres", "Électrik"]}, "Glace": {"t1": "Dragon", "t2": "Glace", "weak_d": [], "weak_s": ["Acier", "Combat", "Dragon", "Fée", "Roche"], "res_d": [], "res_s": ["Eau", "Plante", "Électrik"]}, "Insecte": {"t1": "Dragon", "t2": "Insecte", "weak_d": [], "weak_s": ["Dragon", "Fée", "Glace", "Roche", "Vol"], "res_d": ["Plante"], "res_s": ["Combat", "Eau", "Sol", "Électrik"]}, "Normal": {"t1": "Dragon", "t2": "Normal", "weak_d": [], "weak_s": ["Combat", "Dragon", "Fée", "Glace"], "res_d": ["Spectre"], "res_s": ["Eau", "Feu", "Plante", "Électrik"]}, "Plante": {"t1": "Dragon", "t2": "Plante", "weak_d": ["Glace"], "weak_s": ["Dragon", "Fée", "Insecte", "Poison", "Vol"], "res_d": ["Eau", "Plante", "Électrik"], "res_s": ["Sol"]}, "Poison": {"t1": "Dragon", "t2": "Poison", "weak_d": [], "weak_s": ["Dragon", "Glace", "Psy", "Sol"], "res_d": ["Plante"], "res_s": ["Combat", "Eau", "Feu", "Insecte", "Poison", "Électrik"]}, "Psy": {"t1": "Dragon", "t2": "Psy", "weak_d": [], "weak_s": ["Dragon", "Fée", "Glace", "Insecte", "Spectre", "Ténèbres"], "res_d": [], "res_s": ["Combat", "Eau", "Feu", "Plante", "Psy", "Électrik"]}, "Roche": {"t1": "Dragon", "t2": "Roche", "weak_d": [], "weak_s": ["Acier", "Combat", "Dragon", "Fée", "Glace", "Sol"], "res_d": ["Feu"], "res_s": ["Normal", "Poison", "Vol", "Électrik"]}, "Sol": {"t1": "Dragon", "t2": "Sol", "weak_d": ["Glace"], "weak_s": ["Dragon", "Fée"], "res_d": ["Électrik"], "res_s": ["Feu", "Poison", "Roche"]}, "Spectre": {"t1": "Dragon", "t2": "Spectre", "weak_d": [], "weak_s": ["Dragon", "Fée", "Glace", "Spectre", "Ténèbres"], "res_d": ["Combat", "Normal"], "res_s": ["Eau", "Feu", "Insecte", "Plante", "Poison", "Électrik"]}, "Ténèbres": {"t1": "Dragon", "t2": "Ténèbres", "weak_d": ["Fée"], "weak_s": ["Combat", "Dragon", "Glace", "Insecte"], "res_d": ["Psy"], "res_s": ["Eau", "Feu", "Plante", "Spectre", "Ténèbres", "Électrik"]}, "Vol": {"t1": "Dragon", "t2": "Vol", "weak_d": ["Glace"], "weak_s": ["Dragon", "Fée", "Roche"], "res_d": ["Plante", "Sol"], "res_s": ["Combat", "Eau", "Feu", "Insecte"]}, "Électrik": {"t1": "Dragon", "t2": "Électrik", "weak_d": [], "weak_s": ["Dragon", "Fée", "Glace", "Sol"], "res_d": ["Électrik"], "res_s": ["Acier", "Eau", "Feu", "Plante", "Vol"]}}, "Spectre": {"Mono": {"t1": "Spectre", "t2": null, "weak_d": [], "weak_s": ["Spectre", "Ténèbres"], "res_d": ["Combat", "Normal"], "res_s": ["Insecte", "Poison"]}, "Acier": {"t1": "Spectre", "t2": "Acier", "weak_d": [], "weak_s": ["Feu", "Sol", "Spectre", "Ténèbres"], "res_d": ["Insecte", "Normal", "Poison"], "res_s": ["Acier", "Combat", "Dragon", "Fée", "Glace", "Plante", "Psy", "Roche", "Vol"]}, "Combat": {"t1": "Spectre", "t2": "Combat", "weak_d": [], "weak_s": ["Fée", "Psy", "Spectre", "Vol"], "res_d": ["Combat", "Insecte", "Normal"], "res_s": ["Poison", "Roche"]}, "Dragon": {"t1": "Spectre", "t2": "Dragon", "weak_d": [], "weak_s": ["Dragon", "Fée", "Glace", "Spectre", "Ténèbres"], "res_d": ["Combat", "Normal"], "res_s": ["Eau", "Feu", "Insecte", "Plante", "Poison", "Électrik"]}, "Eau": {"t1": "Spectre", "t2": "Eau", "weak_d": [], "weak_s": ["Plante", "Spectre", "Ténèbres", "Électrik"], "res_d": ["Combat", "Normal"], "res_s": ["Acier", "Eau", "Feu", "Glace", "Insecte", "Poison"]}, "Feu": {"t1": "Spectre", "t2": "Feu", "weak_d": [], "weak_s": ["Eau", "Roche", "Sol", "Spectre", "Ténèbres"], "res_d": ["Combat", "Insecte", "Normal"], "res_s": ["Acier", "Feu", "Fée", "Glace", "Plante", "Poison"]}, "Fée": {"t1": "Spectre", "t2": "Fée", "weak_d": [], "weak_s": ["Acier", "Spectre"], "res_d": [], "res_s": ["Combat", "Dragon", "Insecte", "Normal"]}, "Glace": {"t1": "Spectre", "t2": "Glace", "weak_d": [], "weak_s": ["Acier", "Feu", "Roche", "Spectre", "Ténèbres"], "res_d": ["Normal"], "res_s": ["Combat", "Glace", "Insecte", "Poison"]}, "Insecte": {"t1": "Spectre", "t2": "Insecte", "weak_d": [], "weak_s": ["Feu", "Roche", "Spectre", "Ténèbres", "Vol"], "res_d": ["Combat", "Normal"], "res_s": ["Insecte", "Plante", "Poison", "Sol"]}, "Normal": {"t1": "Spectre", "t2": "Normal", "weak_d": [], "weak_s": ["Ténèbres"], "res_d": ["Normal"], "res_s": ["Combat", "Insecte", "Poison", "Spectre"]}, "Plante": {"t1": "Spectre", "t2": "Plante", "weak_d": [], "weak_s": ["Feu", "Glace", "Spectre", "Ténèbres", "Vol"], "res_d": ["Combat", "Normal"], "res_s": ["Eau", "Plante", "Sol", "Électrik"]}, "Poison": {"t1": "Spectre", "t2": "Poison", "weak_d": [], "weak_s": ["Psy", "Sol", "Spectre", "Ténèbres"], "res_d": ["Combat", "Insecte", "Normal", "Poison"], "res_s": ["Fée", "Plante"]}, "Psy": {"t1": "Spectre", "t2": "Psy", "weak_d": [], "weak_s": ["Spectre", "Ténèbres"], "res_d": ["Combat", "Normal"], "res_s": ["Poison", "Psy"]}, "Roche": {"t1": "Spectre", "t2": "Roche", "weak_d": [], "weak_s": ["Acier", "Eau", "Plante", "Sol", "Spectre", "Ténèbres"], "res_d": ["Normal", "Poison"], "res_s": ["Combat", "Feu", "Insecte", "Vol"]}, "Sol": {"t1": "Spectre", "t2": "Sol", "weak_d": [], "weak_s": ["Eau", "Glace", "Plante", "Spectre", "Ténèbres"], "res_d": ["Combat", "Normal", "Poison", "Électrik"], "res_s": ["Insecte", "Roche"]}, "Ténèbres": {"t1": "Spectre", "t2": "Ténèbres", "weak_d": [], "weak_s": ["Fée"], "res_d": ["Normal", "Psy"], "res_s": ["Combat", "Poison"]}, "Vol": {"t1": "Spectre", "t2": "Vol", "weak_d": [], "weak_s": ["Glace", "Roche", "Spectre", "Ténèbres", "Électrik"], "res_d": ["Combat", "Insecte", "Normal", "Sol"], "res_s": ["Plante", "Poison"]}, "Électrik": {"t1": "Spectre", "t2": "Électrik", "weak_d": [], "weak_s": ["Sol", "Spectre", "Ténèbres"], "res_d": ["Combat", "Normal"], "res_s": ["Acier", "Insecte", "Poison", "Vol", "Électrik"]}}, "Eau": {"Mono": {"t1": "Eau", "t2": null, "weak_d": [], "weak_s": ["Plante", "Électrik"], "res_d": [], "res_s": ["Acier", "Eau", "Feu", "Glace"]}, "Acier": {"t1": "Eau", "t2": "Acier", "weak_d": [], "weak_s": ["Combat", "Sol", "Électrik"], "res_d": ["Acier", "Glace", "Poison"], "res_s": ["Dragon", "Eau", "Fée", "Insecte", "Normal", "Psy", "Roche", "Vol"]}, "Combat": {"t1": "Eau", "t2": "Combat", "weak_d": [], "weak_s": ["Fée", "Plante", "Psy", "Vol", "Électrik"], "res_d": [], "res_s": ["Acier", "Eau", "Feu", "Glace", "Insecte", "Roche", "Ténèbres"]}, "Dragon": {"t1": "Eau", "t2": "Dragon", "weak_d": [], "weak_s": ["Dragon", "Fée"], "res_d": ["Eau", "Feu"], "res_s": ["Acier"]}, "Feu": {"t1": "Eau", "t2": "Feu", "weak_d": [], "weak_s": ["Roche", "Sol", "Électrik"], "res_d": ["Acier", "Feu", "Glace"], "res_s": ["Fée", "Insecte"]}, "Fée": {"t1": "Eau", "t2": "Fée", "weak_d": [], "weak_s": ["Plante", "Poison", "Électrik"], "res_d": ["Dragon"], "res_s": ["Combat", "Eau", "Feu", "Glace", "Insecte", "Ténèbres"]}, "Glace": {"t1": "Eau", "t2": "Glace", "weak_d": [], "weak_s": ["Combat", "Plante", "Roche", "Électrik"], "res_d": ["Glace"], "res_s": ["Eau"]}, "Insecte": {"t1": "Eau", "t2": "Insecte", "weak_d": [], "weak_s": ["Roche", "Vol", "Électrik"], "res_d": [], "res_s": ["Acier", "Combat", "Eau", "Glace", "Sol"]}, "Normal": {"t1": "Eau", "t2": "Normal", "weak_d": [], "weak_s": ["Combat", "Plante", "Électrik"], "res_d": ["Spectre"], "res_s": ["Acier", "Eau", "Feu", "Glace"]}, "Plante": {"t1": "Eau", "t2": "Plante", "weak_d": [], "weak_s": ["Insecte", "Poison", "Vol"], "res_d": ["Eau"], "res_s": ["Acier", "Sol"]}, "Poison": {"t1": "Eau", "t2": "Poison", "weak_d": [], "weak_s": ["Psy", "Sol", "Électrik"], "res_d": [], "res_s": ["Acier", "Combat", "Eau", "Feu", "Fée", "Glace", "Insecte", "Poison"]}, "Psy": {"t1": "Eau", "t2": "Psy", "weak_d": [], "weak_s": ["Insecte", "Plante", "Spectre", "Ténèbres", "Électrik"], "res_d": [], "res_s": ["Acier", "Combat", "Eau", "Feu", "Glace", "Psy"]}, "Roche": {"t1": "Eau", "t2": "Roche", "weak_d": ["Plante"], "weak_s": ["Combat", "Sol", "Électrik"], "res_d": ["Feu"], "res_s": ["Glace", "Normal", "Poison", "Vol"]}, "Sol": {"t1": "Eau", "t2": "Sol", "weak_d": [], "weak_s": ["Plante"], "res_d": [], "res_s": ["Acier", "Feu", "Poison", "Roche", "Électrik"]}, "Spectre": {"t1": "Eau", "t2": "Spectre", "weak_d": [], "weak_s": ["Plante", "Spectre", "Ténèbres", "Électrik"], "res_d": ["Combat", "Normal"], "res_s": ["Acier", "Eau", "Feu", "Glace", "Insecte", "Poison"]}, "Ténèbres": {"t1": "Eau", "t2": "Ténèbres", "weak_d": [], "weak_s": ["Combat", "Fée", "Insecte", "Plante", "Électrik"], "res_d": ["Psy"], "res_s": ["Acier", "Eau", "Feu", "Glace", "Spectre", "Ténèbres"]}, "Vol": {"t1": "Eau", "t2": "Vol", "weak_d": ["Électrik"], "weak_s": ["Roche"], "res_d": ["Sol"], "res_s": ["Acier", "Combat", "Eau", "Feu", "Insecte"]}, "Électrik": {"t1": "Eau", "t2": "Électrik", "weak_d": [], "weak_s": ["Plante", "Sol"], "res_d": ["Acier"], "res_s": ["Eau", "Feu", "Glace", "Vol"]}}, "Normal": {"Mono": {"t1": "Normal", "t2": null, "weak_d": [], "weak_s": ["Combat"], "res_d": [], "res_s": ["Spectre"]}, "Acier": {"t1": "Normal", "t2": "Acier", "weak_d": ["Combat"], "weak_s": ["Feu", "Sol"], "res_d": ["Poison", "Spectre"], "res_s": ["Acier", "Dragon", "Fée", "Glace", "Insecte", "Normal", "Plante", "Psy", "Roche", "Vol"]}, "Combat": {"t1": "Normal", "t2": "Combat", "weak_d": [], "weak_s": ["Combat", "Fée", "Psy", "Vol"], "res_d": ["Spectre"], "res_s": ["Insecte", "Roche", "Ténèbres"]}, "Dragon": {"t1": "Normal", "t2": "Dragon", "weak_d": [], "weak_s": ["Combat", "Dragon", "Fée", "Glace"], "res_d": ["Spectre"], "res_s": ["Eau", "Feu", "Plante", "Électrik"]}, "Eau": {"t1": "Normal", "t2": "Eau", "weak_d": [], "weak_s": ["Combat", "Plante", "Électrik"], "res_d": ["Spectre"], "res_s": ["Acier", "Eau", "Feu", "Glace"]}, "Feu": {"t1": "Normal", "t2": "Feu", "weak_d": [], "weak_s": ["Combat", "Eau", "Roche", "Sol"], "res_d": ["Spectre"], "res_s": ["Acier", "Feu", "Fée", "Glace", "Insecte", "Plante"]}, "Fée": {"t1": "Normal", "t2": "Fée", "weak_d": [], "weak_s": ["Acier", "Poison"], "res_d": ["Dragon", "Spectre"], "res_s": ["Insecte", "Ténèbres"]}, "Glace": {"t1": "Normal", "t2": "Glace", "weak_d": ["Combat"], "weak_s": ["Acier", "Feu", "Roche"], "res_d": ["Spectre"], "res_s": ["Glace"]}, "Insecte": {"t1": "Normal", "t2": "Insecte", "weak_d": [], "weak_s": ["Feu", "Roche", "Vol"], "res_d": ["Spectre"], "res_s": ["Plante", "Sol"]}, "Plante": {"t1": "Normal", "t2": "Plante", "weak_d": [], "weak_s": ["Combat", "Feu", "Glace", "Insecte", "Poison", "Vol"], "res_d": ["Spectre"], "res_s": ["Eau", "Plante", "Sol", "Électrik"]}, "Poison": {"t1": "Normal", "t2": "Poison", "weak_d": [], "weak_s": ["Psy", "Sol"], "res_d": ["Spectre"], "res_s": ["Fée", "Insecte", "Plante", "Poison"]}, "Psy": {"t1": "Normal", "t2": "Psy", "weak_d": [], "weak_s": ["Insecte", "Ténèbres"], "res_d": [], "res_s": ["Psy", "Spectre"]}, "Roche": {"t1": "Normal", "t2": "Roche", "weak_d": ["Combat"], "weak_s": ["Acier", "Eau", "Plante", "Sol"], "res_d": ["Spectre"], "res_s": ["Feu", "Normal", "Poison", "Vol"]}, "Sol": {"t1": "Normal", "t2": "Sol", "weak_d": [], "weak_s": ["Combat", "Eau", "Glace", "Plante"], "res_d": ["Spectre", "Électrik"], "res_s": ["Poison", "Roche"]}, "Spectre": {"t1": "Normal", "t2": "Spectre", "weak_d": [], "weak_s": ["Ténèbres"], "res_d": ["Normal"], "res_s": ["Combat", "Insecte", "Poison", "Spectre"]}, "Ténèbres": {"t1": "Normal", "t2": "Ténèbres", "weak_d": ["Combat"], "weak_s": ["Fée", "Insecte"], "res_d": ["Psy", "Spectre"], "res_s": ["Ténèbres"]}, "Vol": {"t1": "Normal", "t2": "Vol", "weak_d": [], "weak_s": ["Glace", "Roche", "Électrik"], "res_d": ["Sol", "Spectre"], "res_s": ["Insecte", "Plante"]}, "Électrik": {"t1": "Normal", "t2": "Électrik", "weak_d": [], "weak_s": ["Combat", "Sol"], "res_d": ["Spectre"], "res_s": ["Acier", "Vol", "Électrik"]}}, "Feu": {"Mono": {"t1": "Feu", "t2": null, "weak_d": [], "weak_s": ["Eau", "Roche", "Sol"], "res_d": [], "res_s": ["Acier", "Feu", "Fée", "Glace", "Insecte", "Plante"]}, "Acier": {"t1": "Feu", "t2": "Acier", "weak_d": ["Sol"], "weak_s": ["Combat", "Eau"], "res_d": ["Acier", "Fée", "Glace", "Insecte", "Plante", "Poison"], "res_s": ["Dragon", "Normal", "Psy", "Vol"]}, "Combat": {"t1": "Feu", "t2": "Combat", "weak_d": [], "weak_s": ["Eau", "Psy", "Sol", "Vol"], "res_d": ["Insecte"], "res_s": ["Acier", "Feu", "Glace", "Plante", "Ténèbres"]}, "Dragon": {"t1": "Feu", "t2": "Dragon", "weak_d": [], "weak_s": ["Dragon", "Roche", "Sol"], "res_d": ["Feu", "Plante"], "res_s": ["Acier", "Insecte", "Électrik"]}, "Eau": {"t1": "Feu", "t2": "Eau", "weak_d": [], "weak_s": ["Roche", "Sol", "Électrik"], "res_d": ["Acier", "Feu", "Glace"], "res_s": ["Fée", "Insecte"]}, "Fée": {"t1": "Feu", "t2": "Fée", "weak_d": [], "weak_s": ["Eau", "Poison", "Roche", "Sol"], "res_d": ["Dragon", "Insecte"], "res_s": ["Combat", "Feu", "Fée", "Glace", "Plante", "Ténèbres"]}, "Glace": {"t1": "Feu", "t2": "Glace", "weak_d": ["Roche"], "weak_s": ["Combat", "Eau", "Sol"], "res_d": ["Glace"], "res_s": ["Fée", "Insecte", "Plante"]}, "Insecte": {"t1": "Feu", "t2": "Insecte", "weak_d": ["Roche"], "weak_s": ["Eau", "Vol"], "res_d": ["Plante"], "res_s": ["Acier", "Combat", "Fée", "Glace", "Insecte"]}, "Normal": {"t1": "Feu", "t2": "Normal", "weak_d": [], "weak_s": ["Combat", "Eau", "Roche", "Sol"], "res_d": ["Spectre"], "res_s": ["Acier", "Feu", "Fée", "Glace", "Insecte", "Plante"]}, "Plante": {"t1": "Feu", "t2": "Plante", "weak_d": [], "weak_s": ["Poison", "Roche", "Vol"], "res_d": ["Plante"], "res_s": ["Acier", "Fée", "Électrik"]}, "Poison": {"t1": "Feu", "t2": "Poison", "weak_d": ["Sol"], "weak_s": ["Eau", "Psy", "Roche"], "res_d": ["Fée", "Insecte", "Plante"], "res_s": ["Acier", "Combat", "Feu", "Glace", "Poison"]}, "Psy": {"t1": "Feu", "t2": "Psy", "weak_d": [], "weak_s": ["Eau", "Roche", "Sol", "Spectre", "Ténèbres"], "res_d": [], "res_s": ["Acier", "Combat", "Feu", "Fée", "Glace", "Plante", "Psy"]}, "Roche": {"t1": "Feu", "t2": "Roche", "weak_d": ["Eau", "Sol"], "weak_s": ["Combat", "Roche"], "res_d": ["Feu"], "res_s": ["Fée", "Glace", "Insecte", "Normal", "Poison", "Vol"]}, "Sol": {"t1": "Feu", "t2": "Sol", "weak_d": ["Eau"], "weak_s": ["Sol"], "res_d": ["Électrik"], "res_s": ["Acier", "Feu", "Fée", "Insecte", "Poison"]}, "Spectre": {"t1": "Feu", "t2": "Spectre", "weak_d": [], "weak_s": ["Eau", "Roche", "Sol", "Spectre", "Ténèbres"], "res_d": ["Combat", "Insecte", "Normal"], "res_s": ["Acier", "Feu", "Fée", "Glace", "Plante", "Poison"]}, "Ténèbres": {"t1": "Feu", "t2": "Ténèbres", "weak_d": [], "weak_s": ["Combat", "Eau", "Roche", "Sol"], "res_d": ["Psy"], "res_s": ["Acier", "Feu", "Glace", "Plante", "Spectre", "Ténèbres"]}, "Vol": {"t1": "Feu", "t2": "Vol", "weak_d": ["Roche"], "weak_s": ["Eau", "Électrik"], "res_d": ["Insecte", "Plante"], "res_s": ["Acier", "Combat", "Feu", "Fée", "Sol"]}, "Électrik": {"t1": "Feu", "t2": "Électrik", "weak_d": ["Sol"], "weak_s": ["Eau", "Roche"], "res_d": ["Acier"], "res_s": ["Feu", "Fée", "Glace", "Insecte", "Plante", "Vol", "Électrik"]}}, "Acier": {"Mono": {"t1": "Acier", "t2": null, "weak_d": [], "weak_s": ["Combat", "Feu", "Sol"], "res_d": ["Poison"], "res_s": ["Acier", "Dragon", "Fée", "Glace", "Insecte", "Normal", "Plante", "Psy", "Roche", "Vol"]}, "Combat": {"t1": "Acier", "t2": "Combat", "weak_d": [], "weak_s": ["Combat", "Feu", "Sol"], "res_d": ["Insecte", "Poison", "Roche"], "res_s": ["Acier", "Dragon", "Glace", "Normal", "Plante", "Ténèbres"]}, "Dragon": {"t1": "Acier", "t2": "Dragon", "weak_d": [], "weak_s": ["Combat", "Sol"], "res_d": ["Plante", "Poison"], "res_s": ["Acier", "Eau", "Insecte", "Normal", "Psy", "Roche", "Vol", "Électrik"]}, "Eau": {"t1": "Acier", "t2": "Eau", "weak_d": [], "weak_s": ["Combat", "Sol", "Électrik"], "res_d": ["Acier", "Glace", "Poison"], "res_s": ["Dragon", "Eau", "Fée", "Insecte", "Normal", "Psy", "Roche", "Vol"]}, "Feu": {"t1": "Acier", "t2": "Feu", "weak_d": ["Sol"], "weak_s": ["Combat", "Eau"], "res_d": ["Acier", "Fée", "Glace", "Insecte", "Plante", "Poison"], "res_s": ["Dragon", "Normal", "Psy", "Vol"]}, "Fée": {"t1": "Acier", "t2": "Fée", "weak_d": [], "weak_s": ["Feu", "Sol"], "res_d": ["Dragon", "Insecte"], "res_s": ["Fée", "Glace", "Normal", "Plante", "Poison", "Psy", "Roche", "Ténèbres", "Vol"]}, "Glace": {"t1": "Acier", "t2": "Glace", "weak_d": ["Combat", "Feu"], "weak_s": ["Sol"], "res_d": ["Glace", "Poison"], "res_s": ["Dragon", "Fée", "Insecte", "Normal", "Plante", "Psy", "Vol"]}, "Insecte": {"t1": "Acier", "t2": "Insecte", "weak_d": [], "weak_s": ["Feu"], "res_d": ["Plante", "Poison"], "res_s": ["Acier", "Dragon", "Fée", "Glace", "Insecte", "Normal", "Psy"]}, "Normal": {"t1": "Acier", "t2": "Normal", "weak_d": ["Combat"], "weak_s": ["Feu", "Sol"], "res_d": ["Poison", "Spectre"], "res_s": ["Acier", "Dragon", "Fée", "Glace", "Insecte", "Normal", "Plante", "Psy", "Roche", "Vol"]}, "Plante": {"t1": "Acier", "t2": "Plante", "weak_d": ["Feu"], "weak_s": ["Combat"], "res_d": ["Plante"], "res_s": ["Acier", "Dragon", "Eau", "Fée", "Normal", "Poison", "Psy", "Roche", "Électrik"]}, "Poison": {"t1": "Acier", "t2": "Poison", "weak_d": ["Sol"], "weak_s": ["Feu"], "res_d": ["Fée", "Insecte", "Plante", "Poison"], "res_s": ["Acier", "Dragon", "Glace", "Normal", "Roche", "Vol"]}, "Psy": {"t1": "Acier", "t2": "Psy", "weak_d": [], "weak_s": ["Feu", "Sol", "Spectre", "Ténèbres"], "res_d": ["Poison", "Psy"], "res_s": ["Acier", "Dragon", "Fée", "Glace", "Normal", "Plante", "Roche", "Vol"]}, "Roche": {"t1": "Acier", "t2": "Roche", "weak_d": ["Combat", "Sol"], "weak_s": ["Eau"], "res_d": ["Normal", "Poison", "Vol"], "res_s": ["Dragon", "Fée", "Glace", "Insecte", "Psy", "Roche"]}, "Sol": {"t1": "Acier", "t2": "Sol", "weak_d": [], "weak_s": ["Combat", "Eau", "Feu", "Sol"], "res_d": ["Poison", "Roche", "Électrik"], "res_s": ["Acier", "Dragon", "Fée", "Insecte", "Normal", "Psy", "Vol"]}, "Spectre": {"t1": "Acier", "t2": "Spectre", "weak_d": [], "weak_s": ["Feu", "Sol", "Spectre", "Ténèbres"], "res_d": ["Insecte", "Normal", "Poison"], "res_s": ["Acier", "Combat", "Dragon", "Fée", "Glace", "Plante", "Psy", "Roche", "Vol"]}, "Ténèbres": {"t1": "Acier", "t2": "Ténèbres", "weak_d": ["Combat"], "weak_s": ["Feu", "Sol"], "res_d": ["Poison", "Psy"], "res_s": ["Acier", "Dragon", "Glace", "Normal", "Plante", "Roche", "Spectre", "Ténèbres", "Vol"]}, "Vol": {"t1": "Acier", "t2": "Vol", "weak_d": [], "weak_s": ["Feu", "Électrik"], "res_d": ["Insecte", "Plante", "Poison"], "res_s": ["Acier", "Dragon", "Fée", "Normal", "Psy", "Sol", "Vol"]}, "Électrik": {"t1": "Acier", "t2": "Électrik", "weak_d": ["Sol"], "weak_s": ["Combat", "Feu"], "res_d": ["Acier", "Poison", "Vol"], "res_s": ["Dragon", "Fée", "Glace", "Insecte", "Normal", "Plante", "Psy", "Roche", "Électrik"]}}, "Sol": {"Mono": {"t1": "Sol", "t2": null, "weak_d": [], "weak_s": ["Eau", "Glace", "Plante"], "res_d": ["Électrik"], "res_s": ["Poison", "Roche"]}, "Acier": {"t1": "Sol", "t2": "Acier", "weak_d": [], "weak_s": ["Combat", "Eau", "Feu", "Sol"], "res_d": ["Poison", "Roche", "Électrik"], "res_s": ["Acier", "Dragon", "Fée", "Insecte", "Normal", "Psy", "Vol"]}, "Combat": {"t1": "Sol", "t2": "Combat", "weak_d": [], "weak_s": ["Eau", "Fée", "Glace", "Plante", "Psy", "Vol"], "res_d": ["Roche", "Électrik"], "res_s": ["Insecte", "Poison", "Ténèbres"]}, "Dragon": {"t1": "Sol", "t2": "Dragon", "weak_d": ["Glace"], "weak_s": ["Dragon", "Fée"], "res_d": ["Électrik"], "res_s": ["Feu", "Poison", "Roche"]}, "Eau": {"t1": "Sol", "t2": "Eau", "weak_d": [], "weak_s": ["Plante"], "res_d": [], "res_s": ["Acier", "Feu", "Poison", "Roche", "Électrik"]}, "Feu": {"t1": "Sol", "t2": "Feu", "weak_d": ["Eau"], "weak_s": ["Sol"], "res_d": ["Électrik"], "res_s": ["Acier", "Feu", "Fée", "Insecte", "Poison"]}, "Fée": {"t1": "Sol", "t2": "Fée", "weak_d": [], "weak_s": ["Acier", "Eau", "Glace", "Plante"], "res_d": ["Dragon", "Électrik"], "res_s": ["Combat", "Insecte", "Roche", "Ténèbres"]}, "Glace": {"t1": "Sol", "t2": "Glace", "weak_d": [], "weak_s": ["Acier", "Combat", "Eau", "Feu", "Plante"], "res_d": ["Électrik"], "res_s": ["Poison"]}, "Insecte": {"t1": "Sol", "t2": "Insecte", "weak_d": [], "weak_s": ["Eau", "Feu", "Glace", "Vol"], "res_d": ["Électrik"], "res_s": ["Combat", "Poison", "Sol"]}, "Normal": {"t1": "Sol", "t2": "Normal", "weak_d": [], "weak_s": ["Combat", "Eau", "Glace", "Plante"], "res_d": ["Spectre", "Électrik"], "res_s": ["Poison", "Roche"]}, "Plante": {"t1": "Sol", "t2": "Plante", "weak_d": ["Glace"], "weak_s": ["Feu", "Insecte", "Vol"], "res_d": ["Électrik"], "res_s": ["Roche", "Sol"]}, "Poison": {"t1": "Sol", "t2": "Poison", "weak_d": [], "weak_s": ["Eau", "Glace", "Psy", "Sol"], "res_d": ["Poison", "Électrik"], "res_s": ["Combat", "Fée", "Insecte", "Roche"]}, "Psy": {"t1": "Sol", "t2": "Psy", "weak_d": [], "weak_s": ["Eau", "Glace", "Insecte", "Plante", "Spectre", "Ténèbres"], "res_d": ["Électrik"], "res_s": ["Combat", "Poison", "Psy", "Roche"]}, "Roche": {"t1": "Sol", "t2": "Roche", "weak_d": ["Eau", "Plante"], "weak_s": ["Acier", "Combat", "Glace", "Sol"], "res_d": ["Poison", "Électrik"], "res_s": ["Feu", "Normal", "Roche", "Vol"]}, "Spectre": {"t1": "Sol", "t2": "Spectre", "weak_d": [], "weak_s": ["Eau", "Glace", "Plante", "Spectre", "Ténèbres"], "res_d": ["Combat", "Normal", "Poison", "Électrik"], "res_s": ["Insecte", "Roche"]}, "Ténèbres": {"t1": "Sol", "t2": "Ténèbres", "weak_d": [], "weak_s": ["Combat", "Eau", "Fée", "Glace", "Insecte", "Plante"], "res_d": ["Psy", "Électrik"], "res_s": ["Poison", "Roche", "Spectre", "Ténèbres"]}, "Vol": {"t1": "Sol", "t2": "Vol", "weak_d": ["Glace"], "weak_s": ["Eau"], "res_d": ["Sol"], "res_s": ["Combat", "Insecte", "Poison", "Électrik"]}, "Électrik": {"t1": "Sol", "t2": "Électrik", "weak_d": [], "weak_s": ["Eau", "Glace", "Plante", "Sol"], "res_d": ["Électrik"], "res_s": ["Acier", "Poison", "Roche", "Vol"]}}, "Combat": {"Mono": {"t1": "Combat", "t2": null, "weak_d": [], "weak_s": ["Fée", "Psy", "Vol"], "res_d": [], "res_s": ["Insecte", "Roche", "Ténèbres"]}, "Acier": {"t1": "Combat", "t2": "Acier", "weak_d": [], "weak_s": ["Combat", "Feu", "Sol"], "res_d": ["Insecte", "Poison", "Roche"], "res_s": ["Acier", "Dragon", "Glace", "Normal", "Plante", "Ténèbres"]}, "Dragon": {"t1": "Combat", "t2": "Dragon", "weak_d": ["Fée"], "weak_s": ["Dragon", "Glace", "Psy", "Vol"], "res_d": [], "res_s": ["Eau", "Feu", "Insecte", "Plante", "Roche", "Ténèbres", "Électrik"]}, "Eau": {"t1": "Combat", "t2": "Eau", "weak_d": [], "weak_s": ["Fée", "Plante", "Psy", "Vol", "Électrik"], "res_d": [], "res_s": ["Acier", "Eau", "Feu", "Glace", "Insecte", "Roche", "Ténèbres"]}, "Feu": {"t1": "Combat", "t2": "Feu", "weak_d": [], "weak_s": ["Eau", "Psy", "Sol", "Vol"], "res_d": ["Insecte"], "res_s": ["Acier", "Feu", "Glace", "Plante", "Ténèbres"]}, "Fée": {"t1": "Combat", "t2": "Fée", "weak_d": [], "weak_s": ["Acier", "Fée", "Poison", "Psy", "Vol"], "res_d": ["Dragon", "Insecte", "Ténèbres"], "res_s": ["Combat", "Roche"]}, "Glace": {"t1": "Combat", "t2": "Glace", "weak_d": [], "weak_s": ["Acier", "Combat", "Feu", "Fée", "Psy", "Vol"], "res_d": [], "res_s": ["Glace", "Insecte", "Ténèbres"]}, "Insecte": {"t1": "Combat", "t2": "Insecte", "weak_d": ["Vol"], "weak_s": ["Feu", "Fée", "Psy"], "res_d": [], "res_s": ["Combat", "Insecte", "Plante", "Sol", "Ténèbres"]}, "Normal": {"t1": "Combat", "t2": "Normal", "weak_d": [], "weak_s": ["Combat", "Fée", "Psy", "Vol"], "res_d": ["Spectre"], "res_s": ["Insecte", "Roche", "Ténèbres"]}, "Plante": {"t1": "Combat", "t2": "Plante", "weak_d": ["Vol"], "weak_s": ["Feu", "Fée", "Glace", "Poison", "Psy"], "res_d": [], "res_s": ["Eau", "Plante", "Roche", "Sol", "Ténèbres", "Électrik"]}, "Poison": {"t1": "Combat", "t2": "Poison", "weak_d": ["Psy"], "weak_s": ["Sol", "Vol"], "res_d": ["Insecte"], "res_s": ["Combat", "Plante", "Poison", "Roche", "Ténèbres"]}, "Psy": {"t1": "Combat", "t2": "Psy", "weak_d": [], "weak_s": ["Fée", "Spectre", "Vol"], "res_d": [], "res_s": ["Combat", "Roche"]}, "Roche": {"t1": "Combat", "t2": "Roche", "weak_d": [], "weak_s": ["Acier", "Combat", "Eau", "Fée", "Plante", "Psy", "Sol"], "res_d": [], "res_s": ["Feu", "Insecte", "Normal", "Poison", "Roche", "Ténèbres"]}, "Sol": {"t1": "Combat", "t2": "Sol", "weak_d": [], "weak_s": ["Eau", "Fée", "Glace", "Plante", "Psy", "Vol"], "res_d": ["Roche", "Électrik"], "res_s": ["Insecte", "Poison", "Ténèbres"]}, "Spectre": {"t1": "Combat", "t2": "Spectre", "weak_d": [], "weak_s": ["Fée", "Psy", "Spectre", "Vol"], "res_d": ["Combat", "Insecte", "Normal"], "res_s": ["Poison", "Roche"]}, "Ténèbres": {"t1": "Combat", "t2": "Ténèbres", "weak_d": ["Fée"], "weak_s": ["Combat", "Vol"], "res_d": ["Ténèbres"], "res_s": ["Psy", "Roche", "Spectre"]}, "Vol": {"t1": "Combat", "t2": "Vol", "weak_d": [], "weak_s": ["Fée", "Glace", "Psy", "Vol", "Électrik"], "res_d": ["Insecte", "Sol"], "res_s": ["Combat", "Plante", "Ténèbres"]}, "Électrik": {"t1": "Combat", "t2": "Électrik", "weak_d": [], "weak_s": ["Fée", "Psy", "Sol"], "res_d": [], "res_s": ["Acier", "Insecte", "Roche", "Ténèbres", "Électrik"]}}, "Fée": {"Mono": {"t1": "Fée", "t2": null, "weak_d": [], "weak_s": ["Acier", "Poison"], "res_d": ["Dragon"], "res_s": ["Combat", "Insecte", "Ténèbres"]}, "Acier": {"t1": "Fée", "t2": "Acier", "weak_d": [], "weak_s": ["Feu", "Sol"], "res_d": ["Dragon", "Insecte"], "res_s": ["Fée", "Glace", "Normal", "Plante", "Poison", "Psy", "Roche", "Ténèbres", "Vol"]}, "Combat": {"t1": "Fée", "t2": "Combat", "weak_d": [], "weak_s": ["Acier", "Fée", "Poison", "Psy", "Vol"], "res_d": ["Dragon", "Insecte", "Ténèbres"], "res_s": ["Combat", "Roche"]}, "Dragon": {"t1": "Fée", "t2": "Dragon", "weak_d": [], "weak_s": ["Acier", "Fée", "Glace", "Poison"], "res_d": [], "res_s": ["Combat", "Dragon", "Eau", "Feu", "Insecte", "Plante", "Ténèbres", "Électrik"]}, "Eau": {"t1": "Fée", "t2": "Eau", "weak_d": [], "weak_s": ["Plante", "Poison", "Électrik"], "res_d": ["Dragon"], "res_s": ["Combat", "Eau", "Feu", "Glace", "Insecte", "Ténèbres"]}, "Feu": {"t1": "Fée", "t2": "Feu", "weak_d": [], "weak_s": ["Eau", "Poison", "Roche", "Sol"], "res_d": ["Dragon", "Insecte"], "res_s": ["Combat", "Feu", "Fée", "Glace", "Plante", "Ténèbres"]}, "Glace": {"t1": "Fée", "t2": "Glace", "weak_d": ["Acier"], "weak_s": ["Feu", "Poison", "Roche"], "res_d": ["Dragon"], "res_s": ["Glace", "Insecte", "Ténèbres"]}, "Insecte": {"t1": "Fée", "t2": "Insecte", "weak_d": [], "weak_s": ["Acier", "Feu", "Poison", "Roche", "Vol"], "res_d": ["Combat", "Dragon"], "res_s": ["Insecte", "Plante", "Sol", "Ténèbres"]}, "Normal": {"t1": "Fée", "t2": "Normal", "weak_d": [], "weak_s": ["Acier", "Poison"], "res_d": ["Dragon", "Spectre"], "res_s": ["Insecte", "Ténèbres"]}, "Plante": {"t1": "Fée", "t2": "Plante", "weak_d": ["Poison"], "weak_s": ["Acier", "Feu", "Glace", "Vol"], "res_d": ["Dragon"], "res_s": ["Combat", "Eau", "Plante", "Sol", "Ténèbres", "Électrik"]}, "Poison": {"t1": "Fée", "t2": "Poison", "weak_d": [], "weak_s": ["Acier", "Psy", "Sol"], "res_d": ["Combat", "Dragon", "Insecte"], "res_s": ["Fée", "Plante", "Ténèbres"]}, "Psy": {"t1": "Fée", "t2": "Psy", "weak_d": [], "weak_s": ["Acier", "Poison", "Spectre"], "res_d": ["Combat", "Dragon"], "res_s": ["Psy"]}, "Roche": {"t1": "Fée", "t2": "Roche", "weak_d": ["Acier"], "weak_s": ["Eau", "Plante", "Sol"], "res_d": ["Dragon"], "res_s": ["Feu", "Insecte", "Normal", "Ténèbres", "Vol"]}, "Sol": {"t1": "Fée", "t2": "Sol", "weak_d": [], "weak_s": ["Acier", "Eau", "Glace", "Plante"], "res_d": ["Dragon", "Électrik"], "res_s": ["Combat", "Insecte", "Roche", "Ténèbres"]}, "Spectre": {"t1": "Fée", "t2": "Spectre", "weak_d": [], "weak_s": ["Acier", "Spectre"], "res_d": [], "res_s": ["Combat", "Dragon", "Insecte", "Normal"]}, "Ténèbres": {"t1": "Fée", "t2": "Ténèbres", "weak_d": [], "weak_s": ["Acier", "Fée", "Poison"], "res_d": ["Dragon", "Psy", "Ténèbres"], "res_s": ["Spectre"]}, "Vol": {"t1": "Fée", "t2": "Vol", "weak_d": [], "weak_s": ["Acier", "Glace", "Poison", "Roche", "Électrik"], "res_d": ["Combat", "Dragon", "Insecte", "Sol"], "res_s": ["Plante", "Ténèbres"]}, "Électrik": {"t1": "Fée", "t2": "Électrik", "weak_d": [], "weak_s": ["Poison", "Sol"], "res_d": ["Dragon"], "res_s": ["Combat", "Insecte", "Ténèbres", "Vol", "Électrik"]}}, "Roche": {"Mono": {"t1": "Roche", "t2": null, "weak_d": [], "weak_s": ["Acier", "Combat", "Eau", "Plante", "Sol"], "res_d": [], "res_s": ["Feu", "Normal", "Poison", "Vol"]}, "Acier": {"t1": "Roche", "t2": "Acier", "weak_d": ["Combat", "Sol"], "weak_s": ["Eau"], "res_d": ["Normal", "Poison", "Vol"], "res_s": ["Dragon", "Fée", "Glace", "Insecte", "Psy", "Roche"]}, "Combat": {"t1": "Roche", "t2": "Combat", "weak_d": [], "weak_s": ["Acier", "Combat", "Eau", "Fée", "Plante", "Psy", "Sol"], "res_d": [], "res_s": ["Feu", "Insecte", "Normal", "Poison", "Roche", "Ténèbres"]}, "Dragon": {"t1": "Roche", "t2": "Dragon", "weak_d": [], "weak_s": ["Acier", "Combat", "Dragon", "Fée", "Glace", "Sol"], "res_d": ["Feu"], "res_s": ["Normal", "Poison", "Vol", "Électrik"]}, "Eau": {"t1": "Roche", "t2": "Eau", "weak_d": ["Plante"], "weak_s": ["Combat", "Sol", "Électrik"], "res_d": ["Feu"], "res_s": ["Glace", "Normal", "Poison", "Vol"]}, "Feu": {"t1": "Roche", "t2": "Feu", "weak_d": ["Eau", "Sol"], "weak_s": ["Combat", "Roche"], "res_d": ["Feu"], "res_s": ["Fée", "Glace", "Insecte", "Normal", "Poison", "Vol"]}, "Fée": {"t1": "Roche", "t2": "Fée", "weak_d": ["Acier"], "weak_s": ["Eau", "Plante", "Sol"], "res_d": ["Dragon"], "res_s": ["Feu", "Insecte", "Normal", "Ténèbres", "Vol"]}, "Glace": {"t1": "Roche", "t2": "Glace", "weak_d": ["Acier", "Combat"], "weak_s": ["Eau", "Plante", "Roche", "Sol"], "res_d": [], "res_s": ["Glace", "Normal", "Poison", "Vol"]}, "Insecte": {"t1": "Roche", "t2": "Insecte", "weak_d": [], "weak_s": ["Acier", "Eau", "Roche"], "res_d": [], "res_s": ["Normal", "Poison"]}, "Normal": {"t1": "Roche", "t2": "Normal", "weak_d": ["Combat"], "weak_s": ["Acier", "Eau", "Plante", "Sol"], "res_d": ["Spectre"], "res_s": ["Feu", "Normal", "Poison", "Vol"]}, "Plante": {"t1": "Roche", "t2": "Plante", "weak_d": [], "weak_s": ["Acier", "Combat", "Glace", "Insecte"], "res_d": [], "res_s": ["Normal", "Électrik"]}, "Poison": {"t1": "Roche", "t2": "Poison", "weak_d": ["Sol"], "weak_s": ["Acier", "Eau", "Psy"], "res_d": ["Poison"], "res_s": ["Feu", "Fée", "Insecte", "Normal", "Vol"]}, "Psy": {"t1": "Roche", "t2": "Psy", "weak_d": [], "weak_s": ["Acier", "Eau", "Insecte", "Plante", "Sol", "Spectre", "Ténèbres"], "res_d": [], "res_s": ["Feu", "Normal", "Poison", "Psy", "Vol"]}, "Sol": {"t1": "Roche", "t2": "Sol", "weak_d": ["Eau", "Plante"], "weak_s": ["Acier", "Combat", "Glace", "Sol"], "res_d": ["Poison", "Électrik"], "res_s": ["Feu", "Normal", "Roche", "Vol"]}, "Spectre": {"t1": "Roche", "t2": "Spectre", "weak_d": [], "weak_s": ["Acier", "Eau", "Plante", "Sol", "Spectre", "Ténèbres"], "res_d": ["Normal", "Poison"], "res_s": ["Combat", "Feu", "Insecte", "Vol"]}, "Ténèbres": {"t1": "Roche", "t2": "Ténèbres", "weak_d": ["Combat"], "weak_s": ["Acier", "Eau", "Fée", "Insecte", "Plante", "Sol"], "res_d": ["Psy"], "res_s": ["Feu", "Normal", "Poison", "Spectre", "Ténèbres", "Vol"]}, "Vol": {"t1": "Roche", "t2": "Vol", "weak_d": [], "weak_s": ["Acier", "Eau", "Glace", "Roche", "Électrik"], "res_d": [], "res_s": ["Feu", "Insecte", "Normal", "Poison", "Sol", "Vol"]}, "Électrik": {"t1": "Roche", "t2": "Électrik", "weak_d": ["Sol"], "weak_s": ["Combat", "Eau", "Plante"], "res_d": ["Vol"], "res_s": ["Feu", "Normal", "Poison", "Électrik"]}}, "Insecte": {"Mono": {"t1": "Insecte", "t2": null, "weak_d": [], "weak_s": ["Feu", "Roche", "Vol"], "res_d": [], "res_s": ["Combat", "Plante", "Sol"]}, "Acier": {"t1": "Insecte", "t2": "Acier", "weak_d": [], "weak_s": ["Feu"], "res_d": ["Plante", "Poison"], "res_s": ["Acier", "Dragon", "Fée", "Glace", "Insecte", "Normal", "Psy"]}, "Combat": {"t1": "Insecte", "t2": "Combat", "weak_d": ["Vol"], "weak_s": ["Feu", "Fée", "Psy"], "res_d": [], "res_s": ["Combat", "Insecte", "Plante", "Sol", "Ténèbres"]}, "Dragon": {"t1": "Insecte", "t2": "Dragon", "weak_d": [], "weak_s": ["Dragon", "Fée", "Glace", "Roche", "Vol"], "res_d": ["Plante"], "res_s": ["Combat", "Eau", "Sol", "Électrik"]}, "Eau": {"t1": "Insecte", "t2": "Eau", "weak_d": [], "weak_s": ["Roche", "Vol", "Électrik"], "res_d": [], "res_s": ["Acier", "Combat", "Eau", "Glace", "Sol"]}, "Feu": {"t1": "Insecte", "t2": "Feu", "weak_d": ["Roche"], "weak_s": ["Eau", "Vol"], "res_d": ["Plante"], "res_s": ["Acier", "Combat", "Fée", "Glace", "Insecte"]}, "Fée": {"t1": "Insecte", "t2": "Fée", "weak_d": [], "weak_s": ["Acier", "Feu", "Poison", "Roche", "Vol"], "res_d": ["Combat", "Dragon"], "res_s": ["Insecte", "Plante", "Sol", "Ténèbres"]}, "Glace": {"t1": "Insecte", "t2": "Glace", "weak_d": ["Feu", "Roche"], "weak_s": ["Acier", "Vol"], "res_d": [], "res_s": ["Glace", "Plante", "Sol"]}, "Normal": {"t1": "Insecte", "t2": "Normal", "weak_d": [], "weak_s": ["Feu", "Roche", "Vol"], "res_d": ["Spectre"], "res_s": ["Plante", "Sol"]}, "Plante": {"t1": "Insecte", "t2": "Plante", "weak_d": ["Feu", "Vol"], "weak_s": ["Glace", "Insecte", "Poison", "Roche"], "res_d": ["Plante", "Sol"], "res_s": ["Combat", "Eau", "Électrik"]}, "Poison": {"t1": "Insecte", "t2": "Poison", "weak_d": [], "weak_s": ["Feu", "Psy", "Roche", "Vol"], "res_d": ["Combat", "Plante"], "res_s": ["Fée", "Insecte", "Poison"]}, "Psy": {"t1": "Insecte", "t2": "Psy", "weak_d": [], "weak_s": ["Feu", "Insecte", "Roche", "Spectre", "Ténèbres", "Vol"], "res_d": ["Combat"], "res_s": ["Plante", "Psy", "Sol"]}, "Roche": {"t1": "Insecte", "t2": "Roche", "weak_d": [], "weak_s": ["Acier", "Eau", "Roche"], "res_d": [], "res_s": ["Normal", "Poison"]}, "Sol": {"t1": "Insecte", "t2": "Sol", "weak_d": [], "weak_s": ["Eau", "Feu", "Glace", "Vol"], "res_d": ["Électrik"], "res_s": ["Combat", "Poison", "Sol"]}, "Spectre": {"t1": "Insecte", "t2": "Spectre", "weak_d": [], "weak_s": ["Feu", "Roche", "Spectre", "Ténèbres", "Vol"], "res_d": ["Combat", "Normal"], "res_s": ["Insecte", "Plante", "Poison", "Sol"]}, "Ténèbres": {"t1": "Insecte", "t2": "Ténèbres", "weak_d": [], "weak_s": ["Feu", "Fée", "Insecte", "Roche", "Vol"], "res_d": ["Psy"], "res_s": ["Plante", "Sol", "Spectre", "Ténèbres"]}, "Vol": {"t1": "Insecte", "t2": "Vol", "weak_d": ["Roche"], "weak_s": ["Feu", "Glace", "Vol", "Électrik"], "res_d": ["Combat", "Plante", "Sol"], "res_s": ["Insecte"]}, "Électrik": {"t1": "Insecte", "t2": "Électrik", "weak_d": [], "weak_s": ["Feu", "Roche"], "res_d": [], "res_s": ["Acier", "Combat", "Plante", "Électrik"]}}, "Vol": {"Mono": {"t1": "Vol", "t2": null, "weak_d": [], "weak_s": ["Glace", "Roche", "Électrik"], "res_d": ["Sol"], "res_s": ["Combat", "Insecte", "Plante"]}, "Acier": {"t1": "Vol", "t2": "Acier", "weak_d": [], "weak_s": ["Feu", "Électrik"], "res_d": ["Insecte", "Plante", "Poison"], "res_s": ["Acier", "Dragon", "Fée", "Normal", "Psy", "Sol", "Vol"]}, "Combat": {"t1": "Vol", "t2": "Combat", "weak_d": [], "weak_s": ["Fée", "Glace", "Psy", "Vol", "Électrik"], "res_d": ["Insecte", "Sol"], "res_s": ["Combat", "Plante", "Ténèbres"]}, "Dragon": {"t1": "Vol", "t2": "Dragon", "weak_d": ["Glace"], "weak_s": ["Dragon", "Fée", "Roche"], "res_d": ["Plante", "Sol"], "res_s": ["Combat", "Eau", "Feu", "Insecte"]}, "Eau": {"t1": "Vol", "t2": "Eau", "weak_d": ["Électrik"], "weak_s": ["Roche"], "res_d": ["Sol"], "res_s": ["Acier", "Combat", "Eau", "Feu", "Insecte"]}, "Feu": {"t1": "Vol", "t2": "Feu", "weak_d": ["Roche"], "weak_s": ["Eau", "Électrik"], "res_d": ["Insecte", "Plante"], "res_s": ["Acier", "Combat", "Feu", "Fée", "Sol"]}, "Fée": {"t1": "Vol", "t2": "Fée", "weak_d": [], "weak_s": ["Acier", "Glace", "Poison", "Roche", "Électrik"], "res_d": ["Combat", "Dragon", "Insecte", "Sol"], "res_s": ["Plante", "Ténèbres"]}, "Glace": {"t1": "Vol", "t2": "Glace", "weak_d": ["Roche"], "weak_s": ["Acier", "Feu", "Électrik"], "res_d": ["Sol"], "res_s": ["Insecte", "Plante"]}, "Insecte": {"t1": "Vol", "t2": "Insecte", "weak_d": ["Roche"], "weak_s": ["Feu", "Glace", "Vol", "Électrik"], "res_d": ["Combat", "Plante", "Sol"], "res_s": ["Insecte"]}, "Normal": {"t1": "Vol", "t2": "Normal", "weak_d": [], "weak_s": ["Glace", "Roche", "Électrik"], "res_d": ["Sol", "Spectre"], "res_s": ["Insecte", "Plante"]}, "Plante": {"t1": "Vol", "t2": "Plante", "weak_d": ["Glace"], "weak_s": ["Feu", "Poison", "Roche", "Vol"], "res_d": ["Plante", "Sol"], "res_s": ["Combat", "Eau"]}, "Poison": {"t1": "Vol", "t2": "Poison", "weak_d": [], "weak_s": ["Glace", "Psy", "Roche", "Électrik"], "res_d": ["Combat", "Insecte", "Plante"], "res_s": ["Fée", "Poison", "Sol"]}, "Psy": {"t1": "Vol", "t2": "Psy", "weak_d": [], "weak_s": ["Glace", "Roche", "Spectre", "Ténèbres", "Électrik"], "res_d": ["Combat", "Sol"], "res_s": ["Plante", "Psy"]}, "Roche": {"t1": "Vol", "t2": "Roche", "weak_d": [], "weak_s": ["Acier", "Eau", "Glace", "Roche", "Électrik"], "res_d": [], "res_s": ["Feu", "Insecte", "Normal", "Poison", "Sol", "Vol"]}, "Sol": {"t1": "Vol", "t2": "Sol", "weak_d": ["Glace"], "weak_s": ["Eau"], "res_d": ["Sol"], "res_s": ["Combat", "Insecte", "Poison", "Électrik"]}, "Spectre": {"t1": "Vol", "t2": "Spectre", "weak_d": [], "weak_s": ["Glace", "Roche", "Spectre", "Ténèbres", "Électrik"], "res_d": ["Combat", "Insecte", "Normal", "Sol"], "res_s": ["Plante", "Poison"]}, "Ténèbres": {"t1": "Vol", "t2": "Ténèbres", "weak_d": [], "weak_s": ["Fée", "Glace", "Roche", "Électrik"], "res_d": ["Psy", "Sol"], "res_s": ["Plante", "Spectre", "Ténèbres"]}, "Électrik": {"t1": "Vol", "t2": "Électrik", "weak_d": [], "weak_s": ["Glace", "Roche"], "res_d": [], "res_s": ["Acier", "Combat", "Insecte", "Plante", "Sol", "Vol"]}}};
+    const TYPE_ICONS_MAP = {"Acier": "🔩", "Combat": "🥊", "Dragon": "🐉", "Eau": "💧", "Électrik": "⚡", "Fée": "🧚‍♀️", "Feu": "🔥", "Glace": "❄️", "Insecte": "🪲", "Normal": "🔘", "Plante": "🌱", "Poison": "☢️", "Psy": "🌀", "Roche": "🪨", "Sol": "🟫", "Spectre": "👻", "Ténèbres": "🌑", "Vol": "🪽"};
+    const TYPE_SYMBOLS_MAP = {"Acier": "▨", "Combat": "✕", "Dragon": "⍟", "Eau": "巛", "Électrik": "ϟ", "Fée": "♡", "Feu": "⇞", "Glace": "⁂", "Insecte": "☌", "Normal": "⊙", "Plante": "✿", "Poison": "⚯", "Psy": "☯", "Roche": "☖", "Sol": "⌁", "Spectre": "✝", "Ténèbres": "◐", "Vol": "∯"};
+    const TYPE_COLORS_MAP = {"Acier": "#475569", "Combat": "#dc2626", "Dragon": "#6366f1", "Eau": "#2563eb", "Électrik": "#eab308", "Fée": "#ec4899", "Feu": "#ea580c", "Glace": "#0284c7", "Insecte": "#65a30d", "Normal": "#64748b", "Plante": "#16a34a", "Poison": "#9333ea", "Psy": "#e11d48", "Roche": "#854d0e", "Sol": "#b45309", "Spectre": "#7e22ce", "Ténèbres": "#334155", "Vol": "#4f46e5"};
+    const ORDERED_TYPES_LIST = ["Acier", "Combat", "Dragon", "Eau", "Électrik", "Fée", "Feu", "Glace", "Insecte", "Normal", "Plante", "Poison", "Psy", "Roche", "Sol", "Spectre", "Ténèbres", "Vol"];
+
+    let currentSelectedType1 = "Feu";
+    let currentSelectedType2 = null; // null = Mono
+    let currentDocType = "Feu";
+
+    function initTypesModule() {
+      renderTypeButtons();
+      updateTypeMatchup();
+      renderDocTypePills();
+      renderDocTypeTable();
+    }
+
+    function renderTypeButtons() {
+      const g1 = document.getElementById('grid-type1-buttons');
+      const g2 = document.getElementById('grid-type2-buttons');
+      if (!g1 || !g2) return;
+
+      g1.innerHTML = ORDERED_TYPES_LIST.map(t => {
+        const isSel = (t === currentSelectedType1);
+        const icon = TYPE_ICONS_MAP[t] || '';
+        const col = TYPE_COLORS_MAP[t] || '#475569';
+        return `
+          <button onclick="selectType1('${t}')" 
+                  style="border-color: ${isSel ? '#ffffff' : col};" 
+                  class="p-2 rounded-xl text-xs font-black transition-all flex flex-col items-center justify-center gap-1 ${
+                    isSel ? 'ring-2 ring-white scale-105 shadow-lg text-white' : 'opacity-80 hover:opacity-100 hover:scale-102 text-slate-200'
+                  }" style="background-color: ${col};">
+            <span class="text-base">${icon}</span>
+            <span class="truncate w-full text-center text-[11px]">${t}</span>
+          </button>
+        `;
+      }).join('');
+
+      let g2Html = `
+        <button onclick="selectType2(null)" 
+                class="p-2 rounded-xl text-xs font-black transition-all flex flex-col items-center justify-center gap-1 border ${
+                  currentSelectedType2 === null ? 'border-pink-500 bg-pink-500/20 text-pink-300 ring-2 ring-pink-500 scale-105 shadow-md' : 'border-slate-700 bg-slate-900/80 text-slate-400 hover:text-white'
+                }">
+          <span class="text-base">🔘</span>
+          <span class="truncate w-full text-center text-[11px]">Mono</span>
+        </button>
+      `;
+
+      g2Html += ORDERED_TYPES_LIST.map(t => {
+        if (t === currentSelectedType1) return '';
+        const isSel = (t === currentSelectedType2);
+        const icon = TYPE_ICONS_MAP[t] || '';
+        const col = TYPE_COLORS_MAP[t] || '#475569';
+        return `
+          <button onclick="selectType2('${t}')" 
+                  style="border-color: ${isSel ? '#ffffff' : col};" 
+                  class="p-2 rounded-xl text-xs font-black transition-all flex flex-col items-center justify-center gap-1 ${
+                    isSel ? 'ring-2 ring-white scale-105 shadow-lg text-white' : 'opacity-70 hover:opacity-100 hover:scale-102 text-slate-200'
+                  }" style="background-color: ${col};">
+            <span class="text-base">${icon}</span>
+            <span class="truncate w-full text-center text-[11px]">${t}</span>
+          </button>
+        `;
+      }).join('');
+
+      g2.innerHTML = g2Html;
+
+      // Update badges
+      const b1 = document.getElementById('selected-type1-badge');
+      if (b1) {
+        b1.innerHTML = `${TYPE_ICONS_MAP[currentSelectedType1] || ''} ${currentSelectedType1}`;
+        b1.style.backgroundColor = TYPE_COLORS_MAP[currentSelectedType1] || '#475569';
+      }
+
+      const b2 = document.getElementById('selected-type2-badge');
+      if (b2) {
+        if (currentSelectedType2) {
+          b2.innerHTML = `${TYPE_ICONS_MAP[currentSelectedType2] || ''} ${currentSelectedType2}`;
+          b2.style.backgroundColor = TYPE_COLORS_MAP[currentSelectedType2] || '#475569';
+          b2.className = 'text-xs font-extrabold px-3 py-1 rounded-lg text-white';
+        } else {
+          b2.innerHTML = 'Aucun (Mono-type)';
+          b2.style.backgroundColor = '#1e293b';
+          b2.className = 'text-xs font-extrabold px-3 py-1 rounded-lg text-slate-400 border border-slate-700';
+        }
+      }
+    }
+
+    function selectType1(t) {
+      currentSelectedType1 = t;
+      if (currentSelectedType2 === t) currentSelectedType2 = null;
+      renderTypeButtons();
+      updateTypeMatchup();
+    }
+
+    function selectType2(t) {
+      currentSelectedType2 = t;
+      renderTypeButtons();
+      updateTypeMatchup();
+    }
+
+    function updateTypeMatchup() {
+      const card = document.getElementById('type-result-card');
+      if (!card) return;
+
+      const t1 = currentSelectedType1;
+      const t2 = currentSelectedType2;
+      const key2 = t2 ? t2 : "Mono";
+
+      let combo = TYPE_COMBOS_DATA[t1] ? TYPE_COMBOS_DATA[t1][key2] : null;
+      if (!combo && t2 && TYPE_COMBOS_DATA[t2]) {
+        combo = TYPE_COMBOS_DATA[t2][t1];
+      }
+
+      if (!combo) {
+        card.innerHTML = `<p class="text-sm text-slate-400">Combinaison non trouvée.</p>`;
+        return;
+      }
+
+      const weakD = combo.weak_d || [];
+      const weakS = combo.weak_s || [];
+      const resD = combo.res_d || [];
+      const resS = combo.res_s || [];
+
+      const bestAttacks = [...weakD, ...weakS];
+
+      const renderTypeBadgePills = (list, multText, badgeCls) => {
+        if (!list || list.length === 0) return '<span class="text-xs text-slate-500 italic">Aucune</span>';
+        return list.map(t => {
+          const icon = TYPE_ICONS_MAP[t] || '';
+          const col = TYPE_COLORS_MAP[t] || '#475569';
+          return `
+            <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl font-black text-xs text-white shadow-sm ${badgeCls}" style="background-color: ${col};">
+              <span>${icon}</span>
+              <span>${t}</span>
+              <span class="text-[10px] font-extrabold bg-black/30 px-1.5 py-0.5 rounded-md ml-1">${multText}</span>
+            </span>
+          `;
+        }).join(' ');
+      };
+
+      const sym1 = TYPE_SYMBOLS_MAP[t1] || '';
+      const sym2 = t2 ? (TYPE_SYMBOLS_MAP[t2] || '') : '';
+      const col1 = TYPE_COLORS_MAP[t1] || '#ea580c';
+      const col2 = t2 ? (TYPE_COLORS_MAP[t2] || '#475569') : null;
+
+      card.innerHTML = `
+        <!-- Header Info -->
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-700/80 pb-6">
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl text-white font-black text-base shadow-md" style="background-color: ${col1};">
+              <span>${TYPE_ICONS_MAP[t1] || ''}</span>
+              <span>${sym1} ${t1}</span>
+            </span>
+            ${t2 ? `
+              <span class="text-slate-500 font-black text-lg">/</span>
+              <span class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl text-white font-black text-base shadow-md" style="background-color: ${col2};">
+                <span>${TYPE_ICONS_MAP[t2] || ''}</span>
+                <span>${sym2} ${t2}</span>
+              </span>
+            ` : `
+              <span class="text-xs text-slate-400 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700 font-bold">
+                Mono-type
+              </span>
+            `}
+          </div>
+          <span class="text-xs font-mono font-bold text-slate-400 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800">
+            Profil Officiel Pokémon GO
+          </span>
+        </div>
+
+        <!-- Offensive Recommendation Banner -->
+        <div class="bg-gradient-to-r from-emerald-950/60 to-slate-900 border border-emerald-500/40 p-4 sm:p-5 rounded-2xl shadow-md space-y-2">
+          <div class="flex items-center gap-2 text-emerald-400 font-black text-xs uppercase tracking-wider">
+            <span>⚔️</span> Conseil Tactique : Meilleures Attaques à utiliser contre lui
+          </div>
+          <div class="text-xs text-slate-300 leading-relaxed">
+            Pour lui infliger le maximum de dégâts en Raid ou Arène, frappe avec des attaques de type :
+          </div>
+          <div class="flex flex-wrap gap-2 pt-1">
+            ${bestAttacks.length > 0 
+              ? bestAttacks.map(t => {
+                  const isD = weakD.includes(t);
+                  const icon = TYPE_ICONS_MAP[t] || '';
+                  const col = TYPE_COLORS_MAP[t] || '#475569';
+                  return `
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black text-white shadow-sm ${isD ? 'ring-2 ring-rose-400 animate-pulse' : ''}" style="background-color: ${col};">
+                      <span>${icon}</span>
+                      <span>${t}</span>
+                      <span class="bg-black/40 px-1.5 py-0.5 rounded text-[10px] font-black">${isD ? 'x2.56 🔥' : 'x1.6'}</span>
+                    </span>
+                  `;
+                }).join('')
+              : '<span class="text-xs text-slate-400 italic">Aucune faiblesse spécifique (cas rare)</span>'
+            }
+          </div>
+        </div>
+
+        <!-- Grid Weaknesses & Resistances -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+          
+          <!-- Faiblesses Column -->
+          <div class="bg-[#0f172a] p-5 rounded-2xl border border-rose-500/30 space-y-4">
+            <div class="flex items-center justify-between border-b border-rose-500/20 pb-2">
+              <span class="text-xs font-black text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
+                <span>💔</span> Dégâts Subis : Faiblesses
+              </span>
+              <span class="text-[10px] font-mono font-black text-rose-300 bg-rose-500/20 px-2 py-0.5 rounded-md">
+                ${weakD.length + weakS.length} vulnérabilités
+              </span>
+            </div>
+
+            <!-- Double Faiblesse x2.56 -->
+            ${weakD.length > 0 ? `
+              <div class="space-y-1.5 bg-rose-950/30 p-3 rounded-xl border border-rose-500/40">
+                <span class="text-[11px] font-black text-rose-300 uppercase tracking-wide block">
+                  🚨 Doubles Faiblesses (x2.56 Dégâts Critiques) :
+                </span>
+                <div class="flex flex-wrap gap-1.5 pt-1">
+                  ${renderTypeBadgePills(weakD, 'x2.56', 'ring-1 ring-white/50')}
+                </div>
+              </div>
+            ` : ''}
+
+            <!-- Faiblesse Simple x1.6 -->
+            <div class="space-y-1.5">
+              <span class="text-[11px] font-bold text-slate-300 uppercase tracking-wide block">
+                ⚠️ Faiblesses Simples (x1.6 Efficace) :
+              </span>
+              <div class="flex flex-wrap gap-1.5 pt-1">
+                ${renderTypeBadgePills(weakS, 'x1.6', '')}
+              </div>
+            </div>
+          </div>
+
+          <!-- Resistances Column -->
+          <div class="bg-[#0f172a] p-5 rounded-2xl border border-blue-500/30 space-y-4">
+            <div class="flex items-center justify-between border-b border-blue-500/20 pb-2">
+              <span class="text-xs font-black text-blue-400 uppercase tracking-wider flex items-center gap-1.5">
+                <span>💓</span> Dégâts Réduits : Résistances
+              </span>
+              <span class="text-[10px] font-mono font-black text-blue-300 bg-blue-500/20 px-2 py-0.5 rounded-md">
+                ${resD.length + resS.length} résistances
+              </span>
+            </div>
+
+            <!-- Double Resistance x0.39 / Immunités -->
+            ${resD.length > 0 ? `
+              <div class="space-y-1.5 bg-indigo-950/30 p-3 rounded-xl border border-indigo-500/40">
+                <span class="text-[11px] font-black text-indigo-300 uppercase tracking-wide block">
+                  🛡️ Doubles Résistances / Immunités (x0.39) :
+                </span>
+                <div class="flex flex-wrap gap-1.5 pt-1">
+                  ${renderTypeBadgePills(resD, 'x0.39', 'ring-1 ring-indigo-400')}
+                </div>
+              </div>
+            ` : ''}
+
+            <!-- Résistance Simple x0.625 -->
+            <div class="space-y-1.5">
+              <span class="text-[11px] font-bold text-slate-300 uppercase tracking-wide block">
+                🔰 Résistances Simples (x0.625 Résistant) :
+              </span>
+              <div class="flex flex-wrap gap-1.5 pt-1">
+                ${renderTypeBadgePills(resS, 'x0.625', '')}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      `;
+    }
+
+    function handlePokemonTypeSearch(query) {
+      const resultsEl = document.getElementById('types-poke-results');
+      if (!resultsEl) return;
+      if (!query || query.trim().length < 2) {
+        resultsEl.classList.add('hidden');
+        resultsEl.innerHTML = '';
+        return;
+      }
+
+      const q = query.trim().toLowerCase();
+      const matches = [];
+      if (typeof POKEMONS !== 'undefined') {
+        POKEMONS.forEach(p => {
+          if (p.nom && p.nom.toLowerCase().includes(q) && p.types && p.types.length > 0) {
+            if (!matches.some(m => m.nom.toLowerCase() === p.nom.toLowerCase())) {
+              matches.push({ nom: p.nom, types: p.types, dex: p.dex_num });
+            }
+          }
+        });
+      }
+
+      if (matches.length === 0) {
+        resultsEl.innerHTML = `<div class="p-3 text-xs text-slate-400 italic">Aucun Pokémon trouvé dans ton sac avec ce nom. Utilise les boutons de types ci-dessous !</div>`;
+        resultsEl.classList.remove('hidden');
+        return;
+      }
+
+      resultsEl.innerHTML = matches.slice(0, 8).map(m => `
+        <div onclick="selectPokemonForTypes('${m.nom.replace(/'/g, "\\'")}', '${m.types[0]}', '${m.types.length > 1 ? m.types[1] : ''}')" 
+             class="p-3 hover:bg-slate-800/80 cursor-pointer flex items-center justify-between border-b border-slate-800 last:border-0 transition-colors">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-black text-white">${m.nom}</span>
+            <span class="text-[10px] text-slate-400 font-mono">#${m.dex || ''}</span>
+          </div>
+          <div class="flex items-center gap-1">
+            ${m.types.map(t => `
+              <span class="px-2 py-0.5 rounded text-[10px] font-black text-white" style="background-color: ${TYPE_COLORS_MAP[t] || '#475569'};">
+                ${TYPE_ICONS_MAP[t] || ''} ${t}
+              </span>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+      resultsEl.classList.remove('hidden');
+    }
+
+    function selectPokemonForTypes(nom, t1, t2) {
+      const searchInput = document.getElementById('types-poke-search');
+      const resultsEl = document.getElementById('types-poke-results');
+      if (searchInput) searchInput.value = nom;
+      if (resultsEl) resultsEl.classList.add('hidden');
+
+      currentSelectedType1 = t1;
+      currentSelectedType2 = t2 ? t2 : null;
+      renderTypeButtons();
+      updateTypeMatchup();
+    }
+
+    function toggleExhaustiveTypesGuide() {
+      const c = document.getElementById('types-guide-content');
+      const icon = document.getElementById('types-guide-toggle-icon');
+      if (!c) return;
+      if (c.classList.contains('hidden')) {
+        c.classList.remove('hidden');
+        if (icon) icon.style.transform = 'rotate(180deg)';
+      } else {
+        c.classList.add('hidden');
+        if (icon) icon.style.transform = 'rotate(0deg)';
+      }
+    }
+
+    function renderDocTypePills() {
+      const p = document.getElementById('doc-type-pills');
+      if (!p) return;
+      p.innerHTML = ORDERED_TYPES_LIST.map(t => {
+        const isSel = (t === currentDocType);
+        const icon = TYPE_ICONS_MAP[t] || '';
+        const col = TYPE_COLORS_MAP[t] || '#475569';
+        return `
+          <button onclick="setDocType('${t}')" 
+                  class="px-3 py-1.5 rounded-xl text-xs font-black whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                    isSel ? 'text-white shadow-md ring-2 ring-white scale-105' : 'text-slate-300 opacity-70 hover:opacity-100'
+                  }" style="background-color: ${col};">
+            <span>${icon}</span>
+            <span>${t}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function setDocType(t) {
+      currentDocType = t;
+      renderDocTypePills();
+      renderDocTypeTable();
+    }
+
+    function renderDocTypeTable() {
+      const container = document.getElementById('doc-type-table-container');
+      if (!container) return;
+
+      const t1 = currentDocType;
+      const combos = TYPE_COMBOS_DATA[t1] || {};
+
+      const rows = Object.keys(combos).map(k2 => {
+        const item = combos[k2];
+        const t2 = item.t2;
+        const sym1 = TYPE_SYMBOLS_MAP[t1] || '';
+        const sym2 = t2 ? (TYPE_SYMBOLS_MAP[t2] || '') : '';
+        const col1 = TYPE_COLORS_MAP[t1] || '#ea580c';
+        const col2 = t2 ? (TYPE_COLORS_MAP[t2] || '#475569') : null;
+
+        const weakHtml = [
+          ...(item.weak_d || []).map(t => `<span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-black text-white bg-rose-600 mr-1 mb-1">${t} (x2.56)</span>`),
+          ...(item.weak_s || []).map(t => `<span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold text-white bg-orange-600 mr-1 mb-1">${t} (x1.6)</span>`)
+        ].join('') || '<span class="text-xs text-slate-500 italic">Aucune</span>';
+
+        const resHtml = [
+          ...(item.res_d || []).map(t => `<span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-black text-white bg-indigo-700 mr-1 mb-1">${t} (x0.39)</span>`),
+          ...(item.res_s || []).map(t => `<span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold text-white bg-blue-700 mr-1 mb-1">${t} (x0.625)</span>`)
+        ].join('') || '<span class="text-xs text-slate-500 italic">Aucune</span>';
+
+        return `
+          <tr class="border-b border-slate-800 hover:bg-slate-800/40 transition-colors">
+            <td class="p-3 font-bold text-xs">
+              <div class="flex items-center gap-1.5">
+                <span class="px-2 py-0.5 rounded text-[10px] font-black text-white" style="background-color: ${col1};">
+                  ${sym1} ${t1}
+                </span>
+                ${t2 ? `
+                  <span class="text-slate-500 font-bold">/</span>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-black text-white" style="background-color: ${col2};">
+                    ${sym2} ${t2}
+                  </span>
+                ` : `
+                  <span class="text-[10px] text-slate-400 italic">(Mono)</span>
+                `}
+              </div>
+            </td>
+            <td class="p-3 text-xs leading-relaxed">${weakHtml}</td>
+            <td class="p-3 text-xs leading-relaxed">${resHtml}</td>
+          </tr>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <div class="overflow-x-auto rounded-xl border border-slate-700/80">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-800/80 text-slate-300 text-[11px] uppercase tracking-wider border-b border-slate-700">
+                <th class="p-3">Combinaison</th>
+                <th class="p-3 text-rose-400">💔 Faiblesses</th>
+                <th class="p-3 text-blue-400">💓 Résistances</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    initTypesModule();
+</script>
 
   <!-- BOUTON FLOTTANT HAUT DE PAGE -->
   <button id="floating-back-to-top" 
