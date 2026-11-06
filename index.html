@@ -512,7 +512,7 @@
           Tout voir (108)
         </button>
         <button onclick="filterRadarCategory('event')" id="radar-btn-event" class="radar-filter-btn px-3 py-1.5 rounded-xl bg-[#0f172a] text-purple-300 hover:text-white border border-slate-700 transition-all whitespace-nowrap flex items-center gap-1.5">
-          <span>🎃</span> Événement Halloween
+          <span>🎪</span> Événement
         </button>
         <button onclick="filterRadarCategory('genres')" id="radar-btn-genres" class="radar-filter-btn px-3 py-1.5 rounded-xl bg-[#0f172a] text-rose-300 hover:text-white border border-slate-700 transition-all whitespace-nowrap flex items-center gap-1.5">
           <span>👫</span> Traque de Genre ♂/♀
@@ -2055,144 +2055,18 @@
     // ==========================================
     const RADAR_DATA = {
   "event": {
-    "title": "🎃 Événement Halloween — Partie 2",
-    "badge": "Éphémère · Bonus Bonbons x2",
-    "description": "Nouveaux Shiny débloqués, costumes évolutifs et apparitions exclusives d'Halloween.",
+    "title": "🎪 Événement en cours",
+    "badge": "Intermède · Aucun événement actif",
+    "description": "L'événement d'Halloween est terminé. Focus sur le radar des espèces sauvages et la complétion permanente du Living Dex.",
     "items": [
       {
         "id": "radar_ev_toutombe_shiny",
         "name": "Toutombe Shiny ✨",
-        "sub": "Spectre · Déblocage mondial",
+        "sub": "Spectre · En attente d'échange chanceux avec Yuna",
         "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/971.png",
-        "tag": "✨ Nouveau Shiny",
+        "tag": "✨ Wishlist Yuna",
         "tag_color": "amber",
         "default_checked": false
-      },
-      {
-        "id": "radar_ev_tomberro_shiny",
-        "name": "Tomberro Shiny ✨",
-        "sub": "Évolution Toutombe (50 b.)",
-        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/972.png",
-        "tag": "✨ Nouveau Shiny",
-        "tag_color": "amber",
-        "default_checked": false
-      },
-      {
-        "id": "radar_ev_pikachu_pelerine",
-        "name": "Pikachu (Pèlerine)",
-        "sub": "Raids 1★ · Non évolutif",
-        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
-        "tag": "✅ Attrapé !",
-        "tag_color": "emerald",
-        "default_checked": true
-      },
-      {
-        "id": "radar_ev_theffroi_noeud",
-        "name": "Théffroi (Nœud)",
-        "sub": "Raids 1★ · ↗️ Polthégeist (50b)",
-        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/854.png",
-        "tag": "✅ Attrapé !",
-        "tag_color": "emerald",
-        "default_checked": true
-      },
-      {
-        "id": "radar_ev_spiritomb",
-        "name": "Spiritomb (#442)",
-        "sub": "Étude Spéciale Annuelle",
-        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/442.png",
-        "tag": "🌌 Rare Annuel",
-        "tag_color": "purple",
-        "default_checked": false
-      },
-      {
-        "id": "radar_ev_morpeko",
-        "name": "Morpeko (#877)",
-        "sub": "Études & Combats GBL",
-        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/877.png",
-        "tag": "✅ Attrapé !",
-        "tag_color": "emerald",
-        "default_checked": true
-      },
-      {
-        "id": "radar_ev_zorua",
-        "name": "Zorua (#570)",
-        "sub": "Déguisé en Copain actuel",
-        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/570.png",
-        "tag": "✅ Attrapé !",
-        "tag_color": "emerald",
-        "default_checked": true
-      },
-      {
-        "id": "radar_ev_ectoplasma_gmax",
-        "name": "Ectoplasma Gigamax",
-        "sub": "Combats Max 6★ d'Halloween",
-        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/94.png",
-        "tag": "💥 Combat Max",
-        "tag_color": "red",
-        "default_checked": false
-      },
-      {
-        "id": "radar_ev_brindibou_costume",
-        "name": "Brindibou (Costume)",
-        "sub": "Sauvage & Raids · ↗️ Archéduc",
-        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/722.png",
-        "tag": "✅ Validé Living Dex",
-        "tag_color": "emerald",
-        "default_checked": true
-      },
-      {
-        "id": "radar_ev_grenousse_costume",
-        "name": "Grenousse (Costume)",
-        "sub": "Sauvage & Raids · ↗️ Amphinobi",
-        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/656.png",
-        "tag": "✅ Validé Living Dex",
-        "tag_color": "emerald",
-        "default_checked": true
-      },
-      {
-        "id": "radar_ev_ectoplasma_costume",
-        "name": "Ectoplasma (Costume)",
-        "sub": "Costume Effrayant 2024",
-        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/94.png",
-        "tag": "✅ Validé Living Dex",
-        "tag_color": "emerald",
-        "default_checked": true
-      },
-      {
-        "id": "radar_ev_pitrouille_mini",
-        "name": "Pitrouille (Mini)",
-        "sub": "PC 15 Niv 1 S5 & PC 1000 S4",
-        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/710.png",
-        "tag": "✅ Validé Living Dex",
-        "tag_color": "emerald",
-        "default_checked": true
-      },
-      {
-        "id": "radar_ev_pitrouille_moyenne",
-        "name": "Pitrouille (Moyenne)",
-        "sub": "PC 48 Shiny en S4",
-        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/710.png",
-        "tag": "✅ Validé Living Dex",
-        "tag_color": "emerald",
-        "default_checked": true
-      },
-      {
-        "id": "radar_ev_pitrouille_maxi",
-        "name": "Pitrouille (Maxi)",
-        "sub": "PC 461 en S4 vers Banshitrouye",
-        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/710.png",
-        "tag": "✅ Validé Living Dex",
-        "tag_color": "emerald",
-        "default_checked": true
-      },
-      {
-        "id": "radar_ev_pitrouille_ultra",
-        "name": "Pitrouille (Ultra)",
-        "sub": "PC 253 en S5 & PC 866 en S4",
-        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/710.png",
-        "tag": "✅ Validé Living Dex",
-        "tag_color": "emerald",
-        "default_checked": true
       }
     ]
   },
