@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="fr" class="dark">
 <head>
+  <!-- PWA & Mobile Web App Settings -->
+  <meta name="theme-color" content="#0b0f19">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="PokéHub">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PokéHub Sakura — Pokémon GO & Joplin</title>
@@ -19667,6 +19677,122 @@
     "gender": null,
     "couple_status": "none",
     "partner_info": null
+  },
+  {
+    "nom": "Draby",
+    "section": "Section 1 : Éphémère",
+    "section_id": "s1",
+    "subsection": "Éphémère",
+    "tag": "transférer",
+    "pc": 254,
+    "dex_num": 371,
+    "types": [
+      "Dragon"
+    ],
+    "iv": "88.9%",
+    "actions": [
+      "↗️ <span style=\"color: #ba68c8;\">Drackhaus</span> (<span class='inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/40'>🍬 25 bonbons</span>)",
+      "↗️ <span style=\"color: #ba68c8;\">Drattak</span> (<span class='inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/40'>🍬 100 bonbons</span>)"
+    ],
+    "trophies": [
+      "ready_evolve"
+    ],
+    "has_combat_priority": false,
+    "priority_alert_text": "",
+    "badge": "Éphémère 🗑️",
+    "badge_color": "#f59e0b",
+    "priority_target": "",
+    "is_combat_ready": false,
+    "family": "Draby",
+    "gender": null,
+    "couple_status": "none",
+    "partner_info": null
+  },
+  {
+    "nom": "Doudouvet",
+    "section": "Section 4 : Collection en cours",
+    "section_id": "s4",
+    "subsection": "Gabarits XXL",
+    "tag": "#En cours",
+    "pc": 192,
+    "dex_num": 546,
+    "types": [
+      "Plante",
+      "Fée"
+    ],
+    "iv": "35.6%",
+    "actions": [
+      "↗️ <span style=\"color: #ba68c8;\">Farfaduvet</span> (<span class='inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/40'>🍬 50 bonbons</span> + <span class='inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/40'>💎 1 Pierre Soleil</span>)"
+    ],
+    "trophies": [
+      "xxl",
+      "ready_evolve"
+    ],
+    "has_combat_priority": false,
+    "priority_alert_text": "",
+    "badge": "En cours 🏆",
+    "badge_color": "#a855f7",
+    "priority_target": "",
+    "is_combat_ready": false,
+    "family": "Doudouvet",
+    "gender": null,
+    "couple_status": "none",
+    "partner_info": null
+  },
+  {
+    "nom": "Draby",
+    "section": "Section 5 : Collection archivée",
+    "section_id": "s5",
+    "subsection": "Mascottes Niveau 1",
+    "tag": "#Archives",
+    "pc": 15,
+    "dex_num": 371,
+    "types": [
+      "Dragon"
+    ],
+    "iv": "62.2%",
+    "actions": [],
+    "trophies": [
+      "mascotte"
+    ],
+    "has_combat_priority": false,
+    "priority_alert_text": "",
+    "badge": "Archives 📦",
+    "badge_color": "#64748b",
+    "priority_target": "",
+    "is_combat_ready": false,
+    "family": "Draby",
+    "gender": null,
+    "couple_status": "none",
+    "partner_info": null
+  },
+  {
+    "nom": "Cradopaud ♀",
+    "section": "Section 5 : Collection archivée",
+    "section_id": "s5",
+    "subsection": "Dimorphismes sexuels",
+    "tag": "#Archives",
+    "pc": 65,
+    "dex_num": 453,
+    "types": [
+      "Poison",
+      "Combat"
+    ],
+    "iv": "71.1%",
+    "actions": [],
+    "trophies": [
+      "dimorphisme"
+    ],
+    "has_combat_priority": false,
+    "priority_alert_text": "",
+    "badge": "Archives 📦",
+    "badge_color": "#64748b",
+    "priority_target": "",
+    "is_combat_ready": false,
+    "family": "Cradopaud",
+    "gender": "♀",
+    "couple_status": "single",
+    "partner_info": null
   }
 ];
       let currentSection = 'all';
@@ -23580,9 +23706,9 @@
     "region_id": "kanto",
     "region_nom": "🏛️ Kanto",
     "first_num": 147,
-    "captured_count": 2,
+    "captured_count": 3,
     "total_members": 3,
-    "status": "partial",
+    "status": "complete",
     "members": [
       {
         "num": "0147",
@@ -23604,7 +23730,7 @@
         "num": "0148",
         "num_int": 148,
         "name": "Draco",
-        "captured": false,
+        "captured": true,
         "trophies": {
           "shiny": false,
           "perfect": false,
