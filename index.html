@@ -42359,9 +42359,11 @@
         let modChecked = 0;
         const itemsHtml = mod.items.map(item => {
           totalTasks++;
-          const isDone = (localStorage.getItem(item.id) !== null)
-            ? (localStorage.getItem(item.id) === 'true')
-            : !!item.default_checked;
+          const isDone = (item.default_checked === true)
+            ? true
+            : ((localStorage.getItem(item.id) !== null)
+              ? (localStorage.getItem(item.id) === 'true')
+              : !!item.default_checked);
           
           if (isDone) {
             checkedTasks++;
