@@ -125,7 +125,7 @@
               <span class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded font-black">Sec 1</span>
             </div>
             <div class="flex items-baseline gap-2 mt-1">
-              <span class="text-2xl font-black text-white group-hover:text-amber-400 transition-colors">55</span>
+              <span id="sec-card-count-s1" class="text-2xl font-black text-white group-hover:text-amber-400 transition-colors">56</span>
               <span class="text-[10px] text-slate-400 font-semibold">Pokémon</span>
             </div>
           </div>
@@ -147,7 +147,7 @@
               <span class="text-[10px] bg-red-500/20 text-red-300 border border-red-500/40 px-2 py-0.5 rounded font-black">Sec 2</span>
             </div>
             <div class="flex items-baseline gap-2 mt-1">
-              <span class="text-2xl font-black text-white group-hover:text-red-400 transition-colors">77</span>
+              <span id="sec-card-count-s2" class="text-2xl font-black text-white group-hover:text-red-400 transition-colors">83</span>
               <span class="text-[10px] text-slate-400 font-semibold">Pokémon</span>
             </div>
           </div>
@@ -169,7 +169,7 @@
               <span class="text-[10px] bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 px-2 py-0.5 rounded font-black">Sec 3</span>
             </div>
             <div class="flex items-baseline gap-2 mt-1">
-              <span class="text-2xl font-black text-white group-hover:text-cyan-400 transition-colors">25</span>
+              <span id="sec-card-count-s3" class="text-2xl font-black text-white group-hover:text-cyan-400 transition-colors">25</span>
               <span class="text-[10px] text-slate-400 font-semibold">Pokémon</span>
             </div>
           </div>
@@ -191,7 +191,7 @@
               <span class="text-[10px] bg-pink-500/20 text-pink-300 border border-pink-500/40 px-2 py-0.5 rounded font-black">Sec 4</span>
             </div>
             <div class="flex items-baseline gap-2 mt-1">
-              <span class="text-2xl font-black text-white group-hover:text-pink-400 transition-colors">123</span>
+              <span id="sec-card-count-s4" class="text-2xl font-black text-white group-hover:text-pink-400 transition-colors">136</span>
               <span class="text-[10px] text-slate-400 font-semibold">Pokémon</span>
             </div>
           </div>
@@ -213,7 +213,7 @@
               <span class="text-[10px] bg-purple-500/20 text-purple-300 border border-purple-500/40 px-2 py-0.5 rounded font-black">Sec 5</span>
             </div>
             <div class="flex items-baseline gap-2 mt-1">
-              <span class="text-2xl font-black text-white group-hover:text-purple-400 transition-colors">340</span>
+              <span id="sec-card-count-s5" class="text-2xl font-black text-white group-hover:text-purple-400 transition-colors">354</span>
               <span class="text-[10px] text-slate-400 font-semibold">Pokémon</span>
             </div>
           </div>
@@ -235,7 +235,7 @@
               <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded font-black">Sec 6</span>
             </div>
             <div class="flex items-baseline gap-2 mt-1">
-              <span class="text-2xl font-black text-white group-hover:text-emerald-400 transition-colors">30</span>
+              <span id="sec-card-count-s6" class="text-2xl font-black text-white group-hover:text-emerald-400 transition-colors">26</span>
               <span class="text-[10px] text-slate-400 font-semibold">Pokémon</span>
             </div>
           </div>
@@ -266,13 +266,13 @@
 
         <!-- Section Filters -->
         <div class="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 text-xs font-bold">
-          <button onclick="filterBySection('all')" id="sec-filter-all" class="sec-pill px-3 py-1.5 rounded-xl bg-pink-500 text-white shadow font-black transition-all">Tous (650)</button>
-          <button onclick="filterBySection('s1')" id="sec-filter-s1" class="sec-pill px-3 py-1.5 rounded-xl bg-[#0f172a] text-slate-300 hover:text-white border border-slate-700 transition-all">🗑️ Sec 1 (55)</button>
-          <button onclick="filterBySection('s2')" id="sec-filter-s2" class="sec-pill px-3 py-1.5 rounded-xl bg-[#0f172a] text-slate-300 hover:text-white border border-slate-700 transition-all">⚔️ Sec 2 (77)</button>
+          <button onclick="filterBySection('all')" id="sec-filter-all" class="sec-pill px-3 py-1.5 rounded-xl bg-pink-500 text-white shadow font-black transition-all">Tous (680)</button>
+          <button onclick="filterBySection('s1')" id="sec-filter-s1" class="sec-pill px-3 py-1.5 rounded-xl bg-[#0f172a] text-slate-300 hover:text-white border border-slate-700 transition-all">🗑️ Sec 1 (56)</button>
+          <button onclick="filterBySection('s2')" id="sec-filter-s2" class="sec-pill px-3 py-1.5 rounded-xl bg-[#0f172a] text-slate-300 hover:text-white border border-slate-700 transition-all">⚔️ Sec 2 (83)</button>
           <button onclick="filterBySection('s3')" id="sec-filter-s3" class="sec-pill px-3 py-1.5 rounded-xl bg-[#0f172a] text-slate-300 hover:text-white border border-slate-700 transition-all">🥊 Sec 3 (25)</button>
-          <button onclick="filterBySection('s4')" id="sec-filter-s4" class="sec-pill px-3 py-1.5 rounded-xl bg-[#0f172a] text-slate-300 hover:text-white border border-slate-700 transition-all">🌟 Sec 4 (123)</button>
-          <button onclick="filterBySection('s5')" id="sec-filter-s5" class="sec-pill px-3 py-1.5 rounded-xl bg-[#0f172a] text-slate-300 hover:text-white border border-slate-700 transition-all">🏛️ Sec 5 (340)</button>
-          <button onclick="filterBySection('s6')" id="sec-filter-s6" class="sec-pill px-3 py-1.5 rounded-xl bg-[#0f172a] text-slate-300 hover:text-white border border-slate-700 transition-all">🔄 Sec 6 (30)</button>
+          <button onclick="filterBySection('s4')" id="sec-filter-s4" class="sec-pill px-3 py-1.5 rounded-xl bg-[#0f172a] text-slate-300 hover:text-white border border-slate-700 transition-all">🌟 Sec 4 (136)</button>
+          <button onclick="filterBySection('s5')" id="sec-filter-s5" class="sec-pill px-3 py-1.5 rounded-xl bg-[#0f172a] text-slate-300 hover:text-white border border-slate-700 transition-all">🏛️ Sec 5 (354)</button>
+          <button onclick="filterBySection('s6')" id="sec-filter-s6" class="sec-pill px-3 py-1.5 rounded-xl bg-[#0f172a] text-slate-300 hover:text-white border border-slate-700 transition-all">🔄 Sec 6 (26)</button>
         </div>
       </div>
 
@@ -45191,6 +45191,12 @@
       if (elS5) elS5.textContent = `🏛️ Sec 5 (${counts.s5})`;
       const elS6 = document.getElementById('sec-filter-s6');
       if (elS6) elS6.textContent = `🔄 Sec 6 (${counts.s6})`;
+
+      // Mise à jour automatique des grands blocs compteurs de section
+      ['s1', 's2', 's3', 's4', 's5', 's6'].forEach(k => {
+        const cardEl = document.getElementById('sec-card-count-' + k);
+        if (cardEl) cardEl.textContent = counts[k];
+      });
     }
 
     function updateHeaderCapacity() {
@@ -45216,6 +45222,7 @@
 
     // Initial render
     setTimeout(() => {
+      updateHeaderCapacity();
       renderContextualFilters();
       renderRadarModules();
       applyFilters();
