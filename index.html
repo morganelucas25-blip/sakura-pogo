@@ -64,6 +64,7 @@
           <div class="flex items-center gap-2">
             <h1 class="text-lg font-black tracking-tight text-white">PokéHub</h1>
             <span class="text-xs px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-300 font-extrabold border border-pink-500/40">Sakura</span>
+            <span class="text-xs px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-extrabold border border-indigo-500/40">Niv. 51</span>
           </div>
           <p class="text-[11px] text-slate-400">Pokémon GO & Joplin · Gestionnaire Visuel des Actions</p>
         </div>
@@ -74,13 +75,13 @@
         <div>
           <div class="text-[11px] font-black text-slate-400 uppercase tracking-wider flex items-center justify-between gap-4">
             <span class="flex items-center gap-1.5">🎒 Sac Réel</span>
-            <span class="text-emerald-400 font-extrabold" id="header-places-libres">93 places libres</span>
+            <span class="text-emerald-400 font-extrabold" id="header-places-libres">101 places libres</span>
           </div>
           <div class="flex items-center gap-3 mt-1.5">
             <div class="w-44 h-3 bg-slate-900 rounded-full overflow-hidden border border-slate-700/60 p-0.5">
-              <div class="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-pink-500 rounded-full" id="header-progress-bar" style="width: 87.1%;"></div>
+              <div class="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-pink-500 rounded-full" id="header-progress-bar" style="width: 87.0%;"></div>
             </div>
-            <span class="text-xs font-black text-white" id="header-sac-count">582 <span class="text-slate-400 font-medium">/ 725</span></span>
+            <span class="text-xs font-black text-white" id="header-sac-count">674 <span class="text-slate-400 font-medium">/ 775</span></span>
           </div>
         </div>
       </div>
@@ -45033,7 +45034,7 @@
 
     function updateHeaderCapacity() {
       updateDynamicSectionCounts();
-      const TOTAL_CAPACITY = 725;
+      const TOTAL_CAPACITY = 775;
       const totalPokemon = POKEMONS.length;
       const freeSlots = TOTAL_CAPACITY - totalPokemon;
       const percent = ((totalPokemon / TOTAL_CAPACITY) * 100).toFixed(1);
