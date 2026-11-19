@@ -676,7 +676,51 @@
         </span>
       </div>
 
-            <!-- SECTION A : COMPARAISON SOUVERAINE DES DEUX DICTIONNAIRES -->
+      <!-- SECTION SPECIALE : ASTUCES PRO & MACROS IN-GAME -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Macro Tri Express -->
+        <div class="bg-[#182234] p-6 rounded-3xl border border-amber-500/40 shadow-lg space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-black text-amber-300 flex items-center gap-2">
+              <span>🧹</span> Macro de Tri Express (Mobile)
+            </h3>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              Recherche In-Game
+            </span>
+          </div>
+          <p class="text-xs text-slate-300 font-medium leading-relaxed">
+            Colle cette chaîne magique dans la barre de recherche du jeu pour filtrer en 1 seconde tous les Pokémon ordinaires (non-4*, non-shiny, sans trophée ni fond rare) :
+          </p>
+          <div class="bg-[#0f172a] p-3 rounded-2xl border border-slate-700/80 flex items-center justify-between gap-3">
+            <code class="text-[11px] font-mono text-amber-200 select-all break-all">!4* & !shiny & !xxl & !xxs & !costume & !obscur & !fond rare & !dynamax & distance-100</code>
+            <button onclick="navigator.clipboard.writeText('!4* & !shiny & !xxl & !xxs & !costume & !obscur & !fond rare & !dynamax & distance-100'); showToast('📋 Macro de tri copiée !', 'emerald')"
+                    class="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-white border border-amber-500/40 text-xs font-black transition-all shrink-0 cursor-pointer">
+              Copier
+            </button>
+          </div>
+        </div>
+
+        <!-- Astuce Oeufs 7 km & XL Yuna -->
+        <div class="bg-[#182234] p-6 rounded-3xl border border-indigo-500/40 shadow-lg space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-black text-indigo-300 flex items-center gap-2">
+              <span>🤝</span> Échanges XL Garantis avec Yuna
+            </h3>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+              Bonus Distance &gt; 100 km
+            </span>
+          </div>
+          <p class="text-xs text-slate-300 font-medium leading-relaxed">
+            Les Pokémon issus d'œufs 7 km de cartes postales lointaines (Vivillon Japon, USA, Australie...) portent la distance d'origine (&gt; 10 000 km).
+          </p>
+          <div class="bg-[#0f172a] p-3 rounded-2xl border border-slate-700/80 flex items-center gap-2 text-xs text-indigo-200 font-bold">
+            <span>✨</span>
+            <span>Échanger 1 Pokémon local contre 1 œuf lointain = <strong>3 Bonbons + 1 Bonbon XL GARANTI</strong> à chaque échange !</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION A : COMPARAISON SOUVERAINE DES DEUX DICTIONNAIRES -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         <!-- DICTIONNAIRE 1 : JOPLIN (ILLIMITÉ & ÉMOJIS RICHES) -->
@@ -23317,6 +23361,8 @@
           }
         }
 
+        const ingameName = deriveInGameName(p);
+
         return `
           <div class="pokemon-card bg-[#182234] border ${cardBorderClass} rounded-2xl p-4 transition-all shadow-md hover:shadow-xl flex flex-col justify-between gap-3 relative">
             <div>
@@ -23398,12 +23444,21 @@
                   </button>
                 ` : ''}
               </div>
-              ${p.tag ? `
-                <button onclick="navigator.clipboard.writeText('${p.tag}'); alert('Tag copié : #${p.tag}')" 
-                        class="px-2.5 py-1 bg-[#0f172a] hover:bg-pink-600 text-slate-300 hover:text-white border border-slate-700 hover:border-pink-500 rounded-xl text-[11px] font-bold transition-all shadow-sm flex items-center gap-1">
-                  🏷️ #${p.tag}
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button onclick="copyInGameName('${ingameName}', event)" 
+                        title="Copier le nom in-game (<= 12 car.)" 
+                        class="px-2 py-1 bg-pink-500/15 hover:bg-pink-600 text-pink-300 hover:text-white border border-pink-500/30 hover:border-pink-500 rounded-xl text-[11px] font-black transition-all shadow-sm flex items-center gap-1 cursor-pointer">
+                  <span>📋</span>
+                  <span class="font-mono text-[10px] tracking-tight">${ingameName}</span>
                 </button>
-              ` : ''}
+                ${p.tag ? `
+                  <button onclick="navigator.clipboard.writeText('${p.tag}'); showToast('🏷️ Tag copié : #${p.tag}', 'emerald')" 
+                          title="Copier le tag in-game" 
+                          class="px-2 py-1 bg-[#0f172a] hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 rounded-xl text-[11px] font-bold transition-all shadow-sm flex items-center gap-1 cursor-pointer">
+                    🏷️ #${p.tag}
+                  </button>
+                ` : ''}
+              </div>
             </div>
           </div>
         `;
@@ -23505,6 +23560,103 @@
           if (labelEl) labelEl.innerText = 'Détails';
         }
       }
+    }
+
+    // Toast Notification System
+    function showToast(message, color = 'emerald') {
+      let toast = document.getElementById('global-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'global-toast';
+        document.body.appendChild(toast);
+      }
+      toast.className = `fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl shadow-2xl text-xs font-black flex items-center gap-2 transition-all duration-300 opacity-100 pointer-events-auto transform translate-y-0 ${
+        color === 'pink' ? 'bg-pink-600 text-white shadow-pink-500/40' : 'bg-emerald-600 text-white shadow-emerald-500/40'
+      }`;
+      toast.innerHTML = message;
+      clearTimeout(window.__toastTimeout);
+      window.__toastTimeout = setTimeout(() => {
+        toast.className = toast.className.replace('opacity-100 translate-y-0', 'opacity-0 translate-y-4 pointer-events-none');
+      }, 2400);
+    }
+
+    // Dictionnaire 2 : Calculateur de Noms In-Game (<= 12 car.)
+    const TYPES_MAP_JS = {
+      'acier': '▨', 'combat': '✕', 'dragon': '⍟', 'eau': '巛', 'electrik': 'ϟ', 'électrik': 'ϟ',
+      'fee': '♡', 'fée': '♡', 'feu': '⇞', 'glace': '⁂', 'insecte': '☌', 'normal': '⊙',
+      'plante': '✿', 'poison': '⚯', 'psy': '☯', 'roche': '☖', 'sol': '⌁', 'spectre': '✝',
+      'tenebres': '◐', 'ténèbres': '◐', 'vol': '∯'
+    };
+
+    function deriveInGameName(p) {
+      if (p.nom_ingame) return p.nom_ingame;
+      const sec = p.section_id || '';
+      const nomBrut = (p.nom || '').trim();
+      const nomBase = nomBrut.split('(')[0].trim();
+      
+      if (sec === 's1') return nomBrut.slice(0, 12);
+      if (sec === 's6') return nomBase.slice(0, 12);
+      
+      const typeSyms = (p.types || []).map(t => TYPES_MAP_JS[t.toLowerCase()] || '').join('');
+      const genreSym = p.gender ? p.gender : (nomBrut.includes('♂') ? '♂' : (nomBrut.includes('♀') ? '♀' : ''));
+      
+      let spec = '';
+      const tro = p.trophies || [];
+      const sub = (p.subsection || '').toLowerCase();
+      const nomLow = nomBrut.toLowerCase();
+      
+      if (tro.includes('fond_rare') || nomLow.includes('fond') || sub.includes('fond') || nomLow.includes('ethernatos')) spec = 'FR';
+      else if (tro.includes('costume') || nomLow.includes('costume') || nomLow.includes('chapeau') || sub.includes('costume')) spec = 'E';
+      else if (tro.includes('xxl') || sub.includes('xxl')) spec = '•';
+      else if (tro.includes('xxs') || sub.includes('xxs')) spec = '·';
+      else if (tro.includes('shiny') || sub.includes('chromatique')) spec = 'S';
+      else if (tro.includes('obscur') || nomLow.includes('obs')) spec = 'o';
+      else if (sub.includes('mascotte') || p.pc === 10) spec = (p.pc === 10 ? '=' : '-');
+      
+      if (sec === 's2' || sec === 's3') {
+        let role = 'R';
+        if (sub.includes('dynamax')) role = 'D';
+        else if (sub.includes('défense') || sub.includes('defense')) role = ']';
+        else if (sub.includes('super')) role = ':)';
+        else if (sub.includes('hyper')) role = ':D';
+        
+        let rang = '1';
+        if (sub.includes('élite') || sub.includes('elite')) rang = '★';
+        else if (sub.includes('budget')) rang = '2';
+        
+        const suffixe = typeSyms + genreSym + role + rang + (spec === 'o' ? 'o' : (spec === 'S' ? 'S' : ''));
+        const dispo = 12 - suffixe.length;
+        const nomTronq = nomBase.slice(0, Math.max(3, dispo));
+        const res = nomTronq + suffixe;
+        return res.length > 12 ? res.slice(0, 12) : res;
+      }
+      
+      if (sec === 's4') {
+        const suffixe = typeSyms + genreSym + '‡' + spec;
+        const dispo = 12 - suffixe.length;
+        const nomTronq = nomBase.slice(0, Math.max(3, dispo));
+        const res = nomTronq + suffixe;
+        return res.length > 12 ? res.slice(0, 12) : res;
+      }
+      
+      if (sec === 's5') {
+        const suffixe = typeSyms + genreSym + spec;
+        const dispo = 12 - suffixe.length;
+        const nomTronq = nomBase.slice(0, Math.max(3, dispo));
+        const res = nomTronq + suffixe;
+        return res.length > 12 ? res.slice(0, 12) : res;
+      }
+      
+      return nomBase.slice(0, 12);
+    }
+
+    function copyInGameName(name, evt) {
+      if (evt) evt.stopPropagation();
+      navigator.clipboard.writeText(name).then(() => {
+        showToast(`📋 Nom in-game copié : <span class="font-mono underline">${name}</span>`, 'pink');
+      }).catch(() => {
+        alert('Nom in-game copié : ' + name);
+      });
     }
 
     // Jump from Sac Card to Mon Pokédex Family
