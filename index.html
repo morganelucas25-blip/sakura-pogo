@@ -75,13 +75,13 @@
         <div>
           <div class="text-[11px] font-black text-slate-400 uppercase tracking-wider flex items-center justify-between gap-4">
             <span class="flex items-center gap-1.5">🎒 Sac Réel</span>
-            <span class="text-emerald-400 font-extrabold" id="header-places-libres">101 places libres</span>
+            <span class="text-emerald-400 font-extrabold" id="header-places-libres">184 places libres</span>
           </div>
           <div class="flex items-center gap-3 mt-1.5">
             <div class="w-44 h-3 bg-slate-900 rounded-full overflow-hidden border border-slate-700/60 p-0.5">
-              <div class="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-pink-500 rounded-full" id="header-progress-bar" style="width: 87.0%;"></div>
+              <div class="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-pink-500 rounded-full" id="header-progress-bar" style="width: 79.0%;"></div>
             </div>
-            <span class="text-xs font-black text-white" id="header-sac-count">674 <span class="text-slate-400 font-medium">/ 775</span></span>
+            <span class="text-xs font-black text-white" id="header-sac-count">691 <span class="text-slate-400 font-medium">/ 875</span></span>
           </div>
         </div>
       </div>
@@ -89,7 +89,7 @@
       <!-- Navigation Tabs -->
       <nav class="flex items-center gap-1 bg-[#182234] p-1 rounded-xl border border-slate-700/80 text-xs font-bold">
         <button onclick="switchTab('sac')" id="tab-btn-sac" class="px-3.5 py-1.5 rounded-lg bg-pink-500 text-white shadow-md transition-all flex items-center gap-1.5 font-black">
-          🎒 Sac (606)
+          🎒 Sac (691)
         </button>
         <button onclick="switchTab('pokedex')" id="tab-btn-pokedex" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-1.5 font-bold">
           📖 Pokédex (657)
@@ -45691,7 +45691,7 @@
 
     function updateHeaderCapacity() {
       updateDynamicSectionCounts();
-      const TOTAL_CAPACITY = 775;
+      const TOTAL_CAPACITY = 875;
       const totalPokemon = POKEMONS.length;
       const freeSlots = TOTAL_CAPACITY - totalPokemon;
       const percent = ((totalPokemon / TOTAL_CAPACITY) * 100).toFixed(1);
